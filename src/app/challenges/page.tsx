@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Image from "next/image"
 import { motion } from "framer-motion"
-import { Heart, Eye, MessageSquare, Star, MoreVertical, Award } from "lucide-react"
+import { Heart, Eye, MessageSquare, Star, MoreVertical, Trophy, Calendar, Users, Award } from "lucide-react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -14,7 +14,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { galleryItems } from "@/data/sample-data"
 import { Navigation } from "@/components/navigation"
 
-export default function Home() {
+export default function ChallengePage() {
   // Format large numbers with k suffix
   const formatNumber = (num: number) => {
     return num >= 1000 ? (num / 1000).toFixed(1) + "k" : num
@@ -45,17 +45,17 @@ export default function Home() {
             <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#fff,rgba(255,255,255,0.6))]" />
             <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
               <div className="h-16 w-16 rounded-full bg-gray-800 flex items-center justify-center">
-                <Award className="h-8 w-8 text-amber-500" />
+                <Trophy className="h-8 w-8 text-yellow-500" />
               </div>
               <div className="flex-1">
-                <h2 className="text-xl font-bold mb-2">Featured Images</h2>
+                <h2 className="text-xl font-bold mb-2">AI Art Challenges</h2>
                 <p className="text-muted-foreground max-w-3xl">
-                  All sorts of cool pictures created by our community, from simple shapes to detailed landscapes. A
-                  virtual canvas where you can unleash your creativity or get inspired.
+                  Participate in exciting AI art challenges and competitions. Showcase your skills, win prizes,
+                  and get recognized by the community.
                 </p>
               </div>
               <Button variant="outline" className="mt-4 md:mt-0">
-                Explore all images
+                Create Challenge
               </Button>
             </div>
           </div>
@@ -86,6 +86,10 @@ export default function Home() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
                       <div className="w-full">
                         <h3 className="font-medium text-white truncate">{item.title}</h3>
+                        <div className="flex items-center gap-2 mt-1 text-xs text-gray-300">
+                          <Calendar className="h-3 w-3" />
+                          <span>Ends in 3 days</span>
+                        </div>
                       </div>
                     </div>
                     <Button
@@ -97,12 +101,18 @@ export default function Home() {
                     </Button>
                   </div>
                   <CardContent className="p-3">
-                    <div className="flex items-center">
-                      <Avatar className="h-6 w-6 mr-2">
-                        <AvatarImage src={item.authorAvatar} alt={item.author} />
-                        <AvatarFallback>{item.author.substring(0, 2)}</AvatarFallback>
-                      </Avatar>
-                      <span className="text-sm font-medium truncate">{item.author}</span>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <Avatar className="h-6 w-6 mr-2">
+                          <AvatarImage src={item.authorAvatar} alt={item.author} />
+                          <AvatarFallback>{item.author.substring(0, 2)}</AvatarFallback>
+                        </Avatar>
+                        <span className="text-sm font-medium truncate">{item.author}</span>
+                      </div>
+                      <Badge variant="secondary" className="flex items-center px-1.5 py-0.5">
+                        <Award className="h-3 w-3 mr-0.5" />
+                        <span>Prize: $500</span>
+                      </Badge>
                     </div>
                   </CardContent>
                   <CardFooter className="p-3 pt-0 flex justify-between text-xs text-muted-foreground">
@@ -111,12 +121,12 @@ export default function Home() {
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <div className="flex items-center">
-                              <Heart className="h-3.5 w-3.5 mr-1 text-rose-500" />
+                              <Users className="h-3.5 w-3.5 mr-1 text-blue-500" />
                               <span>{formatNumber(item.likes)}</span>
                             </div>
                           </TooltipTrigger>
                           <TooltipContent>
-                            <p>{item.likes} Likes</p>
+                            <p>{item.likes} Participants</p>
                           </TooltipContent>
                         </Tooltip>
 
@@ -140,7 +150,7 @@ export default function Home() {
                             </div>
                           </TooltipTrigger>
                           <TooltipContent>
-                            <p>{item.comments} Comments</p>
+                            <p>{item.comments} Submissions</p>
                           </TooltipContent>
                         </Tooltip>
                       </div>
@@ -180,4 +190,4 @@ export default function Home() {
       </div>
     </ThemeProvider>
   )
-}
+} 
