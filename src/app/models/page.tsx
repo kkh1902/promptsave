@@ -14,7 +14,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { galleryItems } from "@/data/sample-data"
 import { Navigation } from "@/components/navigation"
 
-export default function Home() {
+export default function ModelsPage() {
   // Format large numbers with k suffix
   const formatNumber = (num: number) => {
     return num >= 1000 ? (num / 1000).toFixed(1) + "k" : num
@@ -48,14 +48,14 @@ export default function Home() {
                 <Award className="h-8 w-8 text-amber-500" />
               </div>
               <div className="flex-1">
-                <h2 className="text-xl font-bold mb-2">Featured Images</h2>
+                <h2 className="text-xl font-bold mb-2">Featured Models</h2>
                 <p className="text-muted-foreground max-w-3xl">
-                  All sorts of cool pictures created by our community, from simple shapes to detailed landscapes. A
-                  virtual canvas where you can unleash your creativity or get inspired.
+                  Discover and download the best AI models created by our community. From Stable Diffusion checkpoints to
+                  custom LoRAs, find everything you need to create amazing AI art.
                 </p>
               </div>
               <Button variant="outline" className="mt-4 md:mt-0">
-                Explore all images
+                Explore all models
               </Button>
             </div>
           </div>
@@ -180,4 +180,4 @@ export default function Home() {
       </div>
     </ThemeProvider>
   )
-}
+} 

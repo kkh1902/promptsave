@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Image from "next/image"
 import { motion } from "framer-motion"
-import { Heart, Eye, MessageSquare, Star, MoreVertical, Award } from "lucide-react"
+import { Heart, Eye, MessageSquare, Star, MoreVertical, ShoppingBag } from "lucide-react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -14,7 +14,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { galleryItems } from "@/data/sample-data"
 import { Navigation } from "@/components/navigation"
 
-export default function Home() {
+export default function ShopPage() {
   // Format large numbers with k suffix
   const formatNumber = (num: number) => {
     return num >= 1000 ? (num / 1000).toFixed(1) + "k" : num
@@ -45,17 +45,17 @@ export default function Home() {
             <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#fff,rgba(255,255,255,0.6))]" />
             <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
               <div className="h-16 w-16 rounded-full bg-gray-800 flex items-center justify-center">
-                <Award className="h-8 w-8 text-amber-500" />
+                <ShoppingBag className="h-8 w-8 text-blue-500" />
               </div>
               <div className="flex-1">
-                <h2 className="text-xl font-bold mb-2">Featured Images</h2>
+                <h2 className="text-xl font-bold mb-2">Shop</h2>
                 <p className="text-muted-foreground max-w-3xl">
-                  All sorts of cool pictures created by our community, from simple shapes to detailed landscapes. A
-                  virtual canvas where you can unleash your creativity or get inspired.
+                  Discover and purchase premium AI art resources, models, and tools. Support creators and
+                  enhance your creative workflow with high-quality assets.
                 </p>
               </div>
               <Button variant="outline" className="mt-4 md:mt-0">
-                Explore all images
+                Browse all products
               </Button>
             </div>
           </div>
@@ -180,4 +180,4 @@ export default function Home() {
       </div>
     </ThemeProvider>
   )
-}
+} 
