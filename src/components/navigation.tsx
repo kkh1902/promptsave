@@ -21,6 +21,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { CategoryNavigation } from "@/components/category/category-navigation"
 
 // Navigation items
 const navItems = [
@@ -54,15 +55,15 @@ export function Navigation() {
         <nav className="hidden md:flex items-center space-x-4 lg:space-x-6 mx-6">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-9 px-2 text-base">
-                Models <ChevronDown className="ml-1 h-4 w-4" />
+              <Button variant="ghost" className="h-9 px-2 text-base transition-all duration-200 ease-in-out hover:bg-muted/80">
+                Models <ChevronDown className="ml-1 h-4 w-4 transition-transform duration-200" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              <DropdownMenuItem>Checkpoint</DropdownMenuItem>
-              <DropdownMenuItem>LoRA</DropdownMenuItem>
-              <DropdownMenuItem>LyCORIS</DropdownMenuItem>
-              <DropdownMenuItem>Embeddings</DropdownMenuItem>
+            <DropdownMenuContent align="start" className="transition-all duration-200">
+              <DropdownMenuItem className="transition-colors duration-150 hover:bg-muted/80">Checkpoint</DropdownMenuItem>
+              <DropdownMenuItem className="transition-colors duration-150 hover:bg-muted/80">LoRA</DropdownMenuItem>
+              <DropdownMenuItem className="transition-colors duration-150 hover:bg-muted/80">LyCORIS</DropdownMenuItem>
+              <DropdownMenuItem className="transition-colors duration-150 hover:bg-muted/80">Embeddings</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </nav>
@@ -70,72 +71,53 @@ export function Navigation() {
         {/* Search */}
         <div className="flex-1 flex items-center">
           <div className="w-full max-w-lg relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground transition-colors duration-200" />
             <Input
               type="search"
               placeholder="Search Civitai..."
-              className="pl-10 bg-muted/50 border-muted focus-visible:ring-primary/20"
+              className="pl-10 bg-muted/50 border-muted focus-visible:ring-primary/20 transition-all duration-200 ease-in-out hover:bg-muted/70 focus:bg-muted/80"
             />
           </div>
         </div>
 
         {/* Actions */}
         <div className="ml-auto flex items-center space-x-2">
-          <Button variant="ghost" size="icon" className="hidden md:flex">
-            <LogIn className="h-5 w-5" />
+          <Button variant="ghost" size="icon" className="hidden md:flex transition-all duration-200 ease-in-out hover:bg-muted/80">
+            <LogIn className="h-5 w-5 transition-transform duration-200 hover:scale-110" />
             <span className="sr-only">Sign In</span>
           </Button>
-          <Button className="hidden md:flex">
-            <PenTool className="mr-2 h-4 w-4" />
+          <Button className="hidden md:flex transition-all duration-200 ease-in-out hover:bg-primary/90">
+            <PenTool className="mr-2 h-4 w-4 transition-transform duration-200" />
             Create
           </Button>
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="md:hidden transition-all duration-200 ease-in-out hover:bg-muted/80"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
-            <Menu className="h-5 w-5" />
+            <Menu className="h-5 w-5 transition-transform duration-200" />
             <span className="sr-only">Menu</span>
           </Button>
         </div>
       </div>
 
       {/* Secondary Navigation */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 hidden md:flex h-10 items-center border-t">
-        <nav className="flex items-center space-x-4 w-full">
-          <div className="flex items-center space-x-4">
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`flex items-center text-sm font-medium transition-colors ${
-                  pathname === item.href
-                    ? "text-foreground bg-muted px-3 py-1.5 rounded-md"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {item.icon}
-                {item.name}
-              </Link>
-            ))}
-          </div>
-        </nav>
-      </div>
+      <CategoryNavigation />
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden border-t">
+        <div className="md:hidden border-t transition-all duration-300 ease-in-out">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-2">
             <nav className="grid grid-cols-2 gap-2">
               {navItems.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`flex items-center p-2 text-sm font-medium rounded-md transition-colors ${
+                  className={`flex items-center p-2 text-sm font-medium rounded-md transition-all duration-200 ease-in-out ${
                     pathname === item.href
-                      ? "bg-muted text-foreground"
-                      : "hover:bg-muted text-muted-foreground hover:text-foreground"
+                      ? "bg-muted/80 text-foreground hover:bg-muted"
+                      : "hover:bg-muted/50 text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {item.icon}
@@ -144,12 +126,12 @@ export function Navigation() {
               ))}
             </nav>
             <div className="mt-4 flex justify-between">
-              <Button variant="outline" className="w-full mr-2">
-                <LogIn className="mr-2 h-4 w-4" />
+              <Button variant="outline" className="w-full mr-2 transition-all duration-200 ease-in-out hover:bg-muted/80">
+                <LogIn className="mr-2 h-4 w-4 transition-transform duration-200" />
                 Sign In
               </Button>
-              <Button className="w-full ml-2">
-                <PenTool className="mr-2 h-4 w-4" />
+              <Button className="w-full ml-2 transition-all duration-200 ease-in-out hover:bg-primary/90">
+                <PenTool className="mr-2 h-4 w-4 transition-transform duration-200" />
                 Create
               </Button>
             </div>

@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Image from "next/image"
 import { motion } from "framer-motion"
-import { Heart, Eye, MessageSquare, Star, MoreVertical, Award } from "lucide-react"
+import { Heart, Eye, MessageSquare, Star, MoreVertical, Trophy } from "lucide-react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -13,10 +13,8 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { galleryItems } from "@/data/sample-data"
 import { Navigation } from "@/components/navigation"
-import { Banner } from "@/components/banner/banner"
-import { Footer } from "@/components/footer/footer"
 
-export default function ModelsPage() {
+export default function ChallengePage() {
   // Format large numbers with k suffix
   const formatNumber = (num: number) => {
     return num >= 1000 ? (num / 1000).toFixed(1) + "k" : num
@@ -42,11 +40,26 @@ export default function ModelsPage() {
         <Navigation />
 
         {/* Featured Banner */}
-        <Banner
-          title="Featured Models"
-          description="Discover and download the best AI models created by our community. From Stable Diffusion checkpoints to custom LoRAs, find everything you need to create amazing AI art."
-          buttonText="Explore all models"
-        />
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+          <div className="relative rounded-lg bg-gradient-to-r from-gray-900 to-gray-800 p-6 overflow-hidden">
+            <div className="absolute inset-0 bg-grid-white/5 [mask-image:linear-gradient(0deg,#fff,rgba(255,255,255,0.6))]" />
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+              <div className="h-16 w-16 rounded-full bg-gray-800 flex items-center justify-center">
+                <Trophy className="h-8 w-8 text-yellow-500" />
+              </div>
+              <div className="flex-1">
+                <h2 className="text-xl font-bold mb-2">Challenges</h2>
+                <p className="text-muted-foreground max-w-3xl">
+                  Participate in exciting AI art challenges and competitions. Showcase your skills, win prizes,
+                  and get recognized by the community.
+                </p>
+              </div>
+              <Button variant="outline" className="mt-4 md:mt-0">
+                Explore all challenges
+              </Button>
+            </div>
+          </div>
+        </div>
 
         {/* Gallery */}
         <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1">
@@ -145,7 +158,25 @@ export default function ModelsPage() {
         </main>
 
         {/* Footer */}
-        <Footer />
+        <footer className="border-t py-6 md:py-0">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 md:h-16">
+            <p className="text-sm text-muted-foreground">© Civitai {new Date().getFullYear()}. All rights reserved.</p>
+            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+              <a href="#" className="hover:text-foreground transition-colors">
+                Terms
+              </a>
+              <a href="#" className="hover:text-foreground transition-colors">
+                Privacy
+              </a>
+              <a href="#" className="hover:text-foreground transition-colors">
+                Safety
+              </a>
+              <a href="#" className="hover:text-foreground transition-colors">
+                API
+              </a>
+            </div>
+          </div>
+        </footer>
       </div>
     </ThemeProvider>
   )
