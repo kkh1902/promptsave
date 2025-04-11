@@ -17,6 +17,8 @@ import { Banner } from "@/components/banner/banner"
 import { Footer } from "@/components/footer/footer"
 import { GalleryGrid } from "@/components/gallery/gallery-grid"
 import { CategoryNavigation } from "@/components/category/category-navigation"
+import { Filter } from "@/components/filter/filter"
+
 export default function PostsPage() {
   // Format large numbers with k suffix
   const formatNumber = (num: number) => {
@@ -52,6 +54,7 @@ export default function PostsPage() {
 
         {/* Gallery */}
         <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1">
+          <Filter type="post" />
           <GalleryGrid items={galleryItems} />
         </main>
 

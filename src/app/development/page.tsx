@@ -17,6 +17,7 @@ import { Banner } from "@/components/banner/banner"
 import { Footer } from "@/components/footer/footer"
 import { GalleryGrid } from "@/components/gallery/gallery-grid"
 import { CategoryNavigation } from "@/components/category/category-navigation"
+import { Filter } from "@/components/filter/filter"
 
 export default function DevelopmentPage() {
   // Format large numbers with k suffix
@@ -45,6 +46,7 @@ export default function DevelopmentPage() {
 
         <CategoryNavigation />
 
+
         {/* Featured Banner */}
         <Banner
           title="Development Resources"
@@ -54,6 +56,7 @@ export default function DevelopmentPage() {
 
         {/* Gallery */}
         <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1">
+          <Filter type="development" />
           <GalleryGrid items={galleryItems} />
         </main>
 

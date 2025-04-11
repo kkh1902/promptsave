@@ -21,7 +21,23 @@ import {
   Skull,
   ImageIcon,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Youtube,
+  Video as VideoIcon,
+  Image as ImageIconAlt,
+  Settings,
+  Brain,
+  Lightbulb,
+  BookOpen,
+  Instagram,
+  MessageSquare,
+  Calendar,
+  Code,
+  Smartphone,
+  Server,
+  Terminal,
+  AppWindow,
+  Cloud
 } from "lucide-react"
 
 const modelCategories = [
@@ -73,8 +89,33 @@ const imageCategories = [
   { name: "SCI-FI", icon: Rocket },
 ]
 
+const postCategories = [
+  { name: "ALL", icon: MessageSquare },
+  { name: "ComfyUI", icon: Settings },
+  { name: "Plans", icon: Calendar },
+  { name: "Video", icon: VideoIcon },
+  { name: "Image", icon: ImageIconAlt },
+  { name: "Youtube", icon: Youtube },
+  { name: "Tiktok", icon: VideoIcon },
+  { name: "Instagram", icon: Instagram },
+  { name: "Productivity", icon: Settings },
+  { name: "Think", icon: Brain },
+  { name: "Idea", icon: Lightbulb },
+  { name: "Philosophy", icon: BookOpen }
+]
+
+const developmentCategories = [
+  { name: "ALL", icon: Code },
+  { name: "React", icon: Code },
+  { name: "React-native", icon: Smartphone },
+  { name: "Springboot", icon: Server },
+  { name: "CursorAI", icon: Terminal },
+  { name: "App", icon: AppWindow },
+  { name: "MCP", icon: Cloud }
+]
+
 interface FilterProps {
-  type: 'model' | 'image'
+  type: 'model' | 'image' | 'post' | 'development'
   onCategoryChange?: (category: string) => void
 }
 
@@ -83,7 +124,14 @@ export function Filter({ type = 'model', onCategoryChange }: FilterProps) {
   const [showLeftArrow, setShowLeftArrow] = useState(false)
   const [showRightArrow, setShowRightArrow] = useState(true)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
-  const categories = type === 'model' ? modelCategories : imageCategories
+  
+  const categories = type === 'model' 
+    ? modelCategories 
+    : type === 'image' 
+    ? imageCategories 
+    : type === 'post'
+    ? postCategories
+    : developmentCategories
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category)
@@ -161,7 +209,7 @@ export function Filter({ type = 'model', onCategoryChange }: FilterProps) {
               )}
               onClick={() => handleCategoryChange(category.name)}
             >
-              {type === 'image' && 'icon' in category && (
+              {(type === 'image' || type === 'post' || type === 'development') && 'icon' in category && (
                 <category.icon className="mr-2 h-4 w-4" />
               )}
               {category.name}
