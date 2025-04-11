@@ -2,12 +2,13 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Filter, Search } from "lucide-react"
+import { Filter as FilterIcon, Search } from "lucide-react"
 
 import { Navigation } from "@/components/navigation/navigation"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Filter } from "@/components/filter/filter"
 
 const categories = [
   { value: "all", label: "All Categories" },
@@ -32,8 +33,9 @@ export default function MarketPage() {
   const [selectedModel, setSelectedModel] = useState("all")
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen flex flex-col">
       <Navigation />
+      <Filter type="image" />
 
       <div className="container px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex flex-col lg:flex-row gap-4 items-start">
@@ -115,7 +117,7 @@ export default function MarketPage() {
                 />
               </div>
               <Button variant="outline" size="icon">
-                <Filter className="h-4 w-4" />
+                <FilterIcon className="h-4 w-4" />
               </Button>
             </div>
 
