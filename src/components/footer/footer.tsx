@@ -11,10 +11,10 @@ interface FooterProps {
 
 export function Footer({ links = [] }: FooterProps) {
   const defaultLinks: FooterLink[] = [
-    { href: "#", label: "Terms" },
-    { href: "#", label: "Privacy" },
-    { href: "#", label: "Safety" },
-    { href: "#", label: "API" },
+    { href: "/terms", label: "Terms" },
+    { href: "/privacy", label: "Privacy" },
+    { href: "/safety", label: "Safety" },
+    { href: "/api", label: "API" },
   ]
 
   const footerLinks = links.length > 0 ? links : defaultLinks

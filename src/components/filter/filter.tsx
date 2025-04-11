@@ -37,26 +37,27 @@ import {
   Server,
   Terminal,
   AppWindow,
-  Cloud
+  Cloud,
+  Award,
+  Users,
+  Trophy,
+  Target,
+  Clock,
+  Bot as AI
 } from "lucide-react"
 
 const modelCategories = [
-  { name: "ALL", href: "#" },
-  { name: "CHARACTER", href: "#" },
-  { name: "STYLE", href: "#" },
-  { name: "CELEBRITY", href: "#" },
-  { name: "CONCEPT", href: "#" },
-  { name: "CLOTHING", href: "#" },
-  { name: "BASE MODEL", href: "#" },
-  { name: "POSES", href: "#" },
-  { name: "BACKGROUND", href: "#" },
-  { name: "TOOL", href: "#" },
-  { name: "VEHICLE", href: "#" },
-  { name: "BUILDINGS", href: "#" },
-  { name: "OBJECTS", href: "#" },
-  { name: "ANIMAL", href: "#" },
-  { name: "ASSETS", href: "#" },
-  { name: "ACTION", href: "#" },
+  { name: "ALL", icon: AI },
+  { name: "Checkpoint", icon: Camera },
+  { name: "Textual Inversion", icon: Brush },
+  { name: "Hypernetwork", icon: User },
+  { name: "Aesthetic Gradient", icon: Building },
+  { name: "LORA", icon: Car },
+  { name: "LoCon", icon: Dog },
+  { name: "ControlNet", icon: Plane },
+  { name: "Upscaler", icon: Mountain },
+  { name: "Motion", icon: PenTool },
+  { name: "Other", icon: Coffee }
 ]
 
 const imageCategories = [
@@ -93,6 +94,7 @@ const postCategories = [
   { name: "ALL", icon: MessageSquare },
   { name: "ComfyUI", icon: Settings },
   { name: "Plans", icon: Calendar },
+  { name: "AI", icon: AI },
   { name: "Video", icon: VideoIcon },
   { name: "Image", icon: ImageIconAlt },
   { name: "Youtube", icon: Youtube },
@@ -114,8 +116,21 @@ const developmentCategories = [
   { name: "MCP", icon: Cloud }
 ]
 
+const challengeCategories = [
+  { name: "ALL", icon: Trophy },
+  { name: "Weekly", icon: Calendar },
+  { name: "Monthly", icon: Calendar },
+  { name: "Community", icon: Users },
+  { name: "Beginner", icon: Target },
+  { name: "Advanced", icon: Trophy },
+  { name: "Time-Limited", icon: Clock },
+  { name: "Theme", icon: Lightbulb },
+  { name: "Style", icon: Brush },
+  { name: "Technical", icon: Code }
+]
+
 interface FilterProps {
-  type: 'model' | 'image' | 'post' | 'development'
+  type: 'model' | 'image' | 'post' | 'development' | 'challenge'
   onCategoryChange?: (category: string) => void
 }
 
@@ -131,7 +146,9 @@ export function Filter({ type = 'model', onCategoryChange }: FilterProps) {
     ? imageCategories 
     : type === 'post'
     ? postCategories
-    : developmentCategories
+    : type === 'development'
+    ? developmentCategories
+    : challengeCategories
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category)
