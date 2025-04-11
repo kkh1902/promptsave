@@ -41,7 +41,7 @@ export function Navigation() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex h-16 items-center">
+      <div className="flex h-16 items-center px-6">
         {/* Logo */}
         <div className="mr-4 flex items-center">
           <Link href="#" className="flex items-center">
@@ -51,37 +51,36 @@ export function Navigation() {
           </Link>
         </div>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-4 lg:space-x-6 mx-6">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-9 px-2 text-base transition-all duration-200 ease-in-out hover:bg-muted/80">
-                Models <ChevronDown className="ml-1 h-4 w-4 transition-transform duration-200" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="transition-all duration-200">
-              <DropdownMenuItem className="transition-colors duration-150 hover:bg-muted/80">Checkpoint</DropdownMenuItem>
-              <DropdownMenuItem className="transition-colors duration-150 hover:bg-muted/80">LoRA</DropdownMenuItem>
-              <DropdownMenuItem className="transition-colors duration-150 hover:bg-muted/80">LyCORIS</DropdownMenuItem>
-              <DropdownMenuItem className="transition-colors duration-150 hover:bg-muted/80">Embeddings</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </nav>
+        {/* Search with Models Dropdown */}
+        <div className="flex-1 flex justify-center items-center">
+          <div className="flex items-center w-full max-w-lg">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-9 px-2 text-base mr-2 transition-all duration-200 ease-in-out hover:bg-muted/80">
+                  Models <ChevronDown className="ml-1 h-4 w-4 transition-transform duration-200" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="transition-all duration-200">
+                <DropdownMenuItem className="transition-colors duration-150 hover:bg-muted/80">Checkpoint</DropdownMenuItem>
+                <DropdownMenuItem className="transition-colors duration-150 hover:bg-muted/80">LoRA</DropdownMenuItem>
+                <DropdownMenuItem className="transition-colors duration-150 hover:bg-muted/80">LyCORIS</DropdownMenuItem>
+                <DropdownMenuItem className="transition-colors duration-150 hover:bg-muted/80">Embeddings</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-        {/* Search */}
-        <div className="flex-1 flex items-center">
-          <div className="w-full max-w-lg relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground transition-colors duration-200" />
-            <Input
-              type="search"
-              placeholder="Search Civitai..."
-              className="pl-10 bg-muted/50 border-muted focus-visible:ring-primary/20 transition-all duration-200 ease-in-out hover:bg-muted/70 focus:bg-muted/80"
-            />
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground transition-colors duration-200" />
+              <Input
+                type="search"
+                placeholder="Search Civitai..."
+                className="pl-10 w-full bg-muted/50 border-muted focus-visible:ring-primary/20 transition-all duration-200 ease-in-out hover:bg-muted/70 focus:bg-muted/80"
+              />
+            </div>
           </div>
         </div>
 
         {/* Actions */}
-        <div className="ml-auto flex items-center space-x-2">
+        <div className="flex items-center space-x-2">
           <Button variant="ghost" size="icon" className="hidden md:flex transition-all duration-200 ease-in-out hover:bg-muted/80">
             <LogIn className="h-5 w-5 transition-transform duration-200 hover:scale-110" />
             <span className="sr-only">Sign In</span>

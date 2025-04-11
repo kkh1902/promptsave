@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { galleryItems } from "@/data/sample-data"
-import { Navigation } from "@/components/navigation"
+import { Navigation } from "@/components/navigation/navigation"
 import { Banner } from "@/components/banner/banner"
 import { Footer } from "@/components/footer/footer"
 import { GalleryGrid } from "@/components/gallery/gallery-grid"
@@ -48,6 +48,8 @@ export default function ModelsPage() {
           description="Explore a collection of AI models created by our community. From text-to-image to image-to-image models, discover the tools that power AI art generation."
           buttonText="Explore all models"
         />
+
+        
 
         {/* Gallery */}
         <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1">
