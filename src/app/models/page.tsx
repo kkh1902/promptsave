@@ -16,7 +16,7 @@ import { Navigation } from "@/components/navigation/navigation"
 import { Banner } from "@/components/banner/banner"
 import { Footer } from "@/components/footer/footer"
 import { GalleryGrid } from "@/components/gallery/gallery-grid"
-
+import { CategoryNavigation } from "@/components/category/category-navigation"
 export default function ModelsPage() {
   // Format large numbers with k suffix
   const formatNumber = (num: number) => {
@@ -42,6 +42,7 @@ export default function ModelsPage() {
       <div className="min-h-screen bg-background text-foreground flex flex-col">
         <Navigation />
 
+        <CategoryNavigation />
         {/* Featured Banner */}
         <Banner
           title="Featured Models"
