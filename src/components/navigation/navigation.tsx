@@ -101,8 +101,6 @@ export function Navigation() {
         </div>
       </div>
 
-      {/* Secondary Navigation */}
-      <CategoryNavigation />
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
