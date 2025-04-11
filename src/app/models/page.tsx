@@ -17,6 +17,8 @@ import { Banner } from "@/components/banner/banner"
 import { Footer } from "@/components/footer/footer"
 import { GalleryGrid } from "@/components/gallery/gallery-grid"
 import { CategoryNavigation } from "@/components/category/category-navigation"
+import { Filter } from "@/components/filter/filter"
+
 export default function ModelsPage() {
   // Format large numbers with k suffix
   const formatNumber = (num: number) => {
@@ -44,6 +46,9 @@ export default function ModelsPage() {
 
         <CategoryNavigation />
         {/* Featured Banner */}
+
+
+
         <Banner
           title="Featured Models"
           description="Explore a collection of AI models created by our community. From text-to-image to image-to-image models, discover the tools that power AI art generation."
@@ -51,9 +56,9 @@ export default function ModelsPage() {
         />
 
         
-
         {/* Gallery */}
         <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1">
+          <Filter type="model" />
           <GalleryGrid items={galleryItems} />
         </main>
 

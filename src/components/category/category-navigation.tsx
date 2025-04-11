@@ -8,8 +8,12 @@ import {
   FileText,
   Code,
   Trophy,
-  ShoppingBag
+  ShoppingBag,
+  Users
 } from "lucide-react"
+import { FilterPopover } from "@/components/filter/filter-popover"
+import { ReactionsPopover } from "@/components/filter/reactions-popover"
+import { EveryonePopover } from "@/components/filter/everyone-popover"
 
 interface NavItem {
   name: string
@@ -66,7 +70,7 @@ export function CategoryNavigation() {
   return (
     <div className="border-t border-border/40 bg-zinc-900/50">
       <div className="flex h-11 items-center px-6">
-        <nav className="flex items-center w-full">
+        <nav className="flex items-center justify-between w-full">
           <div className="flex items-center gap-2">
             {navItems.map((item) => (
               <Link
@@ -82,6 +86,11 @@ export function CategoryNavigation() {
                 {item.name}
               </Link>
             ))}
+          </div>
+          <div className="flex items-center gap-2">
+            <EveryonePopover />
+            <ReactionsPopover />
+            <FilterPopover />
           </div>
         </nav>
       </div>

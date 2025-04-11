@@ -10,19 +10,74 @@ import { Separator } from "@/components/ui/separator"
 import { Github, Mail } from "lucide-react"
 import { Navigation } from "@/components/navigation/navigation"
 import { CategoryNavigation } from "@/components/category/category-navigation"
+import { supabase } from "@/lib/supabase"
+import { toast } from "sonner"
 
 export default function LoginPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsLoading(true)
-    // TODO: 실제 로그인 로직 구현
-    setTimeout(() => {
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+
+      if (error) {
+        toast.error(error.message)
+        return
+      }
+
+      if (data.user) {
+        toast.success("로그인 성공!")
+        router.push("/")
+        router.refresh()
+      }
+    } catch (error) {
+      toast.error("로그인 중 오류가 발생했습니다.")
+    } finally {
       setIsLoading(false)
-      router.push("/")
-    }, 1000)
+    }
+  }
+
+  const handleGoogleLogin = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`
+        }
+      })
+
+      if (error) {
+        toast.error(error.message)
+      }
+    } catch (error) {
+      toast.error("Google 로그인 중 오류가 발생했습니다.")
+    }
+  }
+
+  const handleGithubLogin = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'github',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`
+        }
+      })
+
+      if (error) {
+        toast.error(error.message)
+      }
+    } catch (error) {
+      toast.error("Github 로그인 중 오류가 발생했습니다.")
+    }
   }
 
   return (
@@ -53,6 +108,8 @@ export default function LoginPage() {
                     autoComplete="email"
                     autoCorrect="off"
                     disabled={isLoading}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div className="grid gap-2">
@@ -63,9 +120,11 @@ export default function LoginPage() {
                     autoCapitalize="none"
                     autoComplete="current-password"
                     disabled={isLoading}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
-                <Button disabled={isLoading}>
+                <Button type="submit" disabled={isLoading}>
                   {isLoading && (
                     <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                   )}
@@ -84,11 +143,21 @@ export default function LoginPage() {
               </div>
             </div>
             <div className="grid gap-2">
-              <Button variant="outline" type="button" disabled={isLoading}>
+              <Button 
+                variant="outline" 
+                type="button" 
+                disabled={isLoading}
+                onClick={handleGoogleLogin}
+              >
                 <Mail className="mr-2 h-4 w-4" />
                 Google로 로그인
               </Button>
-              <Button variant="outline" type="button" disabled={isLoading}>
+              <Button 
+                variant="outline" 
+                type="button" 
+                disabled={isLoading}
+                onClick={handleGithubLogin}
+              >
                 <Github className="mr-2 h-4 w-4" />
                 Github로 로그인
               </Button>
