@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { GalleryItem as GalleryItemType } from "@/data/sample-data"
+import { GalleryItem as GalleryItemType } from "@/hooks/useGallery"
 
 interface GalleryItemProps {
   item: GalleryItemType
@@ -20,11 +20,11 @@ export function GalleryItem({ item }: GalleryItemProps) {
   }
 
   return (
-    <Link href={`/models/${item.id}`}>
+    <Link href={`/challenges/${item.id}`}>
       <div className="group relative overflow-hidden rounded-lg border border-gray-800 bg-gray-900 transition-all hover:border-gray-700">
         <div className="aspect-square overflow-hidden">
           <img
-            src={item.imageUrl}
+            src={item.image_url}
             alt={item.title}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
@@ -33,21 +33,21 @@ export function GalleryItem({ item }: GalleryItemProps) {
           <h3 className="mb-1 text-sm font-medium text-white">{item.title}</h3>
           <div className="flex items-center space-x-2">
             <img
-              src={item.authorAvatar}
-              alt={item.author}
+              src={item.user_avatar}
+              alt={item.user_name}
               className="h-6 w-6 rounded-full"
             />
-            <span className="text-xs text-gray-400">{item.author}</span>
+            <span className="text-xs text-gray-400">{item.user_name}</span>
           </div>
           <div className="mt-2 flex items-center justify-between text-xs text-gray-400">
             <div className="flex items-center space-x-2">
-              <span>{item.likes} likes</span>
+              <span>{formatNumber(item.likes)} likes</span>
               <span>•</span>
-              <span>{item.views} views</span>
+              <span>{formatNumber(item.views)} views</span>
             </div>
             <div className="flex items-center space-x-1">
               <span className="text-yellow-400">★</span>
-              <span>{item.rating}</span>
+              <span>{formatNumber(item.comments)}</span>
             </div>
           </div>
         </div>

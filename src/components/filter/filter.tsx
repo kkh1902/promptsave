@@ -21,26 +21,43 @@ import {
   Skull,
   ImageIcon,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Youtube,
+  Video as VideoIcon,
+  Image as ImageIconAlt,
+  Settings,
+  Brain,
+  Lightbulb,
+  BookOpen,
+  Instagram,
+  MessageSquare,
+  Calendar,
+  Code,
+  Smartphone,
+  Server,
+  Terminal,
+  AppWindow,
+  Cloud,
+  Award,
+  Users,
+  Trophy,
+  Target,
+  Clock,
+  Bot as AI
 } from "lucide-react"
 
 const modelCategories = [
-  { name: "ALL", href: "#" },
-  { name: "CHARACTER", href: "#" },
-  { name: "STYLE", href: "#" },
-  { name: "CELEBRITY", href: "#" },
-  { name: "CONCEPT", href: "#" },
-  { name: "CLOTHING", href: "#" },
-  { name: "BASE MODEL", href: "#" },
-  { name: "POSES", href: "#" },
-  { name: "BACKGROUND", href: "#" },
-  { name: "TOOL", href: "#" },
-  { name: "VEHICLE", href: "#" },
-  { name: "BUILDINGS", href: "#" },
-  { name: "OBJECTS", href: "#" },
-  { name: "ANIMAL", href: "#" },
-  { name: "ASSETS", href: "#" },
-  { name: "ACTION", href: "#" },
+  { name: "ALL", icon: AI },
+  { name: "Checkpoint", icon: Camera },
+  { name: "Textual Inversion", icon: Brush },
+  { name: "Hypernetwork", icon: User },
+  { name: "Aesthetic Gradient", icon: Building },
+  { name: "LORA", icon: Car },
+  { name: "LoCon", icon: Dog },
+  { name: "ControlNet", icon: Plane },
+  { name: "Upscaler", icon: Mountain },
+  { name: "Motion", icon: PenTool },
+  { name: "Other", icon: Coffee }
 ]
 
 const imageCategories = [
@@ -73,8 +90,47 @@ const imageCategories = [
   { name: "SCI-FI", icon: Rocket },
 ]
 
+const postCategories = [
+  { name: "ALL", icon: MessageSquare },
+  { name: "ComfyUI", icon: Settings },
+  { name: "Plans", icon: Calendar },
+  { name: "AI", icon: AI },
+  { name: "Video", icon: VideoIcon },
+  { name: "Image", icon: ImageIconAlt },
+  { name: "Youtube", icon: Youtube },
+  { name: "Tiktok", icon: VideoIcon },
+  { name: "Instagram", icon: Instagram },
+  { name: "Productivity", icon: Settings },
+  { name: "Think", icon: Brain },
+  { name: "Idea", icon: Lightbulb },
+  { name: "Philosophy", icon: BookOpen }
+]
+
+const developmentCategories = [
+  { name: "ALL", icon: Code },
+  { name: "React", icon: Code },
+  { name: "React-native", icon: Smartphone },
+  { name: "Springboot", icon: Server },
+  { name: "CursorAI", icon: Terminal },
+  { name: "App", icon: AppWindow },
+  { name: "MCP", icon: Cloud }
+]
+
+const challengeCategories = [
+  { name: "ALL", icon: Trophy },
+  { name: "Weekly", icon: Calendar },
+  { name: "Monthly", icon: Calendar },
+  { name: "Community", icon: Users },
+  { name: "Beginner", icon: Target },
+  { name: "Advanced", icon: Trophy },
+  { name: "Time-Limited", icon: Clock },
+  { name: "Theme", icon: Lightbulb },
+  { name: "Style", icon: Brush },
+  { name: "Technical", icon: Code }
+]
+
 interface FilterProps {
-  type: 'model' | 'image'
+  type: 'model' | 'image' | 'post' | 'development' | 'challenge' | 'video'
   onCategoryChange?: (category: string) => void
 }
 
@@ -83,7 +139,16 @@ export function Filter({ type = 'model', onCategoryChange }: FilterProps) {
   const [showLeftArrow, setShowLeftArrow] = useState(false)
   const [showRightArrow, setShowRightArrow] = useState(true)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
-  const categories = type === 'model' ? modelCategories : imageCategories
+  
+  const categories = type === 'model' 
+    ? modelCategories 
+    : type === 'image' 
+    ? imageCategories 
+    : type === 'post'
+    ? postCategories
+    : type === 'development'
+    ? developmentCategories
+    : challengeCategories
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category)
@@ -161,7 +226,7 @@ export function Filter({ type = 'model', onCategoryChange }: FilterProps) {
               )}
               onClick={() => handleCategoryChange(category.name)}
             >
-              {type === 'image' && 'icon' in category && (
+              {(type === 'image' || type === 'post' || type === 'development') && 'icon' in category && (
                 <category.icon className="mr-2 h-4 w-4" />
               )}
               {category.name}
