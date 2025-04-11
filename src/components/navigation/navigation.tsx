@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -9,6 +9,7 @@ import {
   ChevronDown,
   PenTool,
   LogIn,
+  LogOut,
   Home as HomeIcon,
   ShoppingBag,
   ImageIcon,
@@ -25,6 +26,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { CategoryNavigation } from "@/components/category/category-navigation"
+import { supabase } from "@/lib/supabase"
+import { toast } from "sonner"
 
 // Navigation items
 const navItems = [
@@ -40,7 +43,34 @@ const navItems = [
 
 export function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const pathname = usePathname()
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      setIsLoggedIn(!!user)
+    }
+
+    checkAuth()
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLoggedIn(!!session?.user)
+    })
+
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [])
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut()
+      toast.success("로그아웃 되었습니다.")
+    } catch (error) {
+      toast.error("로그아웃 중 오류가 발생했습니다.")
+    }
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -117,12 +147,23 @@ export function Navigation() {
               </Button>
             </Link>
 
-            <Link href="/login" className="hidden md:block">
-              <Button variant="outline" className="flex items-center space-x-2">
-                <LogIn className="h-4 w-4" />
-                <span>로그인</span>
+            {isLoggedIn ? (
+              <Button
+                variant="outline"
+                className="hidden md:flex items-center space-x-2"
+                onClick={handleLogout}
+              >
+                <LogOut className="h-4 w-4" />
+                <span>로그아웃</span>
               </Button>
-            </Link>
+            ) : (
+              <Link href="/login" className="hidden md:block">
+                <Button variant="outline" className="flex items-center space-x-2">
+                  <LogIn className="h-4 w-4" />
+                  <span>로그인</span>
+                </Button>
+              </Link>
+            )}
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -138,12 +179,19 @@ export function Navigation() {
                   <User className="mr-2 h-4 w-4" />
                   프로필
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/login" className="w-full flex items-center">
-                    <LogIn className="mr-2 h-4 w-4" />
-                    로그인
-                  </Link>
-                </DropdownMenuItem>
+                {isLoggedIn ? (
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    로그아웃
+                  </DropdownMenuItem>
+                ) : (
+                  <DropdownMenuItem asChild>
+                    <Link href="/login" className="w-full flex items-center">
+                      <LogIn className="mr-2 h-4 w-4" />
+                      로그인
+                    </Link>
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -182,12 +230,23 @@ export function Navigation() {
               ))}
             </nav>
             <div className="mt-4 flex justify-between">
-              <Link href="/login" className="w-full">
-                <Button variant="outline" className="w-full transition-all duration-200 ease-in-out hover:bg-muted/80">
-                  <LogIn className="mr-2 h-4 w-4 transition-transform duration-200" />
-                  로그인
+              {isLoggedIn ? (
+                <Button
+                  variant="outline"
+                  className="w-full transition-all duration-200 ease-in-out hover:bg-muted/80"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="mr-2 h-4 w-4 transition-transform duration-200" />
+                  로그아웃
                 </Button>
-              </Link>
+              ) : (
+                <Link href="/login" className="w-full">
+                  <Button variant="outline" className="w-full transition-all duration-200 ease-in-out hover:bg-muted/80">
+                    <LogIn className="mr-2 h-4 w-4 transition-transform duration-200" />
+                    로그인
+                  </Button>
+                </Link>
+              )}
             </div>
             <div className="mt-4 flex justify-between space-x-2">
               <Link href="/notifications" className="flex-1">
