@@ -2,13 +2,21 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Filter as FilterIcon, Search } from "lucide-react"
+import { Heart, Eye, MessageSquare, Star, MoreVertical } from "lucide-react"
 
-import { Navigation } from "@/components/navigation/navigation"
-import { Input } from "@/components/ui/input"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { ThemeProvider } from "@/components/theme-provider"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardFooter } from "@/components/ui/card"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Navigation } from "@/components/navigation/navigation"
+import { Banner } from "@/components/banner/banner"
+import { Footer } from "@/components/footer/footer"
+import { GalleryGrid } from "@/components/gallery/gallery-grid"
+import { CategoryNavigation } from "@/components/category/category-navigation"
 import { Filter } from "@/components/filter/filter"
+import { useGallery } from "@/hooks/useGallery"
 
 const categories = [
   { value: "all", label: "All Categories" },
@@ -29,104 +37,51 @@ const models = [
 ]
 
 export default function MarketPage() {
-  const [selectedCategory, setSelectedCategory] = useState("all")
-  const [selectedModel, setSelectedModel] = useState("all")
+  const [selectedCategory, setSelectedCategory] = useState("ALL")
+  const { items: galleryItems, loading, error } = useGallery(selectedCategory)
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category)
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+        <p>Loading...</p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+        <p>Error: {error}</p>
+      </div>
+    )
+  }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navigation />
-      <Filter type="image" />
+    <ThemeProvider defaultTheme="dark" attribute="class">
+      <div className="min-h-screen bg-background text-foreground flex flex-col">
+        <Navigation />
+        <CategoryNavigation />
 
-      <div className="container px-4 sm:px-6 lg:px-8 py-6">
-        <div className="flex flex-col lg:flex-row gap-4 items-start">
-          {/* Filters */}
-          <div className="w-full lg:w-64 space-y-4 sticky top-[105px]">
-            <div className="p-4 rounded-lg border bg-card">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <h3 className="text-sm font-medium">Category</h3>
-                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories.map((category) => (
-                        <SelectItem key={category.value} value={category.value}>
-                          {category.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+        {/* Featured Banner */}
+        <Banner
+          title="AI Market"
+          description="Buy and sell AI-generated art, models, and resources. Support creators and find unique digital assets."
+          buttonText="View all items"
+        />
 
-                <div className="space-y-2">
-                  <h3 className="text-sm font-medium">Model</h3>
-                  <Select value={selectedModel} onValueChange={setSelectedModel}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select model" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {models.map((model) => (
-                        <SelectItem key={model.value} value={model.value}>
-                          {model.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+        {/* Gallery */}
+        <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1">
+          <Filter type="image" onCategoryChange={handleCategoryChange} />
+          <GalleryGrid items={galleryItems} />
+        </main>
 
-                <div className="space-y-2">
-                  <h3 className="text-sm font-medium">Price</h3>
-                  <div className="grid grid-cols-2 gap-2">
-                    <Button variant="outline" size="sm" className="w-full justify-center">
-                      Free
-                    </Button>
-                    <Button variant="outline" size="sm" className="w-full justify-center">
-                      Paid
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <h3 className="text-sm font-medium">Rating</h3>
-                  <div className="space-y-1.5">
-                    <Button variant="outline" size="sm" className="w-full justify-center">
-                      5 Stars
-                    </Button>
-                    <Button variant="outline" size="sm" className="w-full justify-center">
-                      4+ Stars
-                    </Button>
-                    <Button variant="outline" size="sm" className="w-full justify-center">
-                      3+ Stars
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Content */}
-          <div className="flex-1 space-y-4">
-            <div className="flex items-center gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  type="search"
-                  placeholder="Search prompts..."
-                  className="pl-10"
-                />
-              </div>
-              <Button variant="outline" size="icon">
-                <FilterIcon className="h-4 w-4" />
-              </Button>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4">
-              {/* Cards will be rendered here */}
-            </div>
-          </div>
-        </div>
+        {/* Footer */}
+        <Footer />
       </div>
-    </div>
+    </ThemeProvider>
   )
 } 

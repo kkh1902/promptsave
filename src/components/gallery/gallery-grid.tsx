@@ -1,6 +1,6 @@
 import { motion } from "framer-motion"
 import { GalleryItem } from "./gallery-item"
-import { GalleryItem as GalleryItemType } from "@/data/sample-data"
+import { GalleryItem as GalleryItemType } from "@/hooks/useGallery"
 
 interface GalleryGridProps {
   items: GalleryItemType[]

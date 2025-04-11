@@ -130,7 +130,7 @@ const challengeCategories = [
 ]
 
 interface FilterProps {
-  type: 'model' | 'image' | 'post' | 'development' | 'challenge'
+  type: 'model' | 'image' | 'post' | 'development' | 'challenge' | 'video'
   onCategoryChange?: (category: string) => void
 }
 
