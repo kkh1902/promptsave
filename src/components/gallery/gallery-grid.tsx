@@ -1,45 +1,23 @@
 import { motion } from "framer-motion"
 import { GalleryItem } from "./gallery-item"
-
-interface GalleryItem {
-  id: string
-  imageUrl: string
-  title: string
-  author: string
-  authorAvatar: string
-  likes: number
-  views: number
-  comments: number
-  rating: number
-}
+import { GalleryItem as GalleryItemType } from "@/data/sample-data"
 
 interface GalleryGridProps {
-  items: GalleryItem[]
+  items: GalleryItemType[]
 }
 
 export function GalleryGrid({ items }: GalleryGridProps) {
-  const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: i * 0.1,
-        duration: 0.5,
-        ease: "easeOut",
-      },
-    }),
-  }
-
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
-      {items.map((item, index) => (
-        <GalleryItem
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+      {items.map((item) => (
+        <motion.div
           key={item.id}
-          {...item}
-          index={index}
-          variants={cardVariants}
-        />
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <GalleryItem item={item} />
+        </motion.div>
       ))}
     </div>
   )

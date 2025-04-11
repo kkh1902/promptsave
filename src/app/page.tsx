@@ -12,11 +12,11 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { galleryItems } from "@/data/sample-data"
-import { Navigation } from "@/components/navigation"
+import { Navigation } from "@/components/navigation/navigation"
 import { Banner } from "@/components/banner/banner"
 import { Footer } from "@/components/footer/footer"
 import { GalleryGrid } from "@/components/gallery/gallery-grid"
-
+import { CategoryNavigation } from "@/components/category/category-navigation"
 export default function Home() {
   // Format large numbers with k suffix
   const formatNumber = (num: number) => {
@@ -41,6 +41,9 @@ export default function Home() {
     <ThemeProvider defaultTheme="dark" attribute="class">
       <div className="min-h-screen bg-background text-foreground flex flex-col">
         <Navigation />
+
+        {/* CategoryNavigation */}
+        <CategoryNavigation />
 
         {/* Featured Banner */}
         <Banner

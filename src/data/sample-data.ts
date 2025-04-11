@@ -1,28 +1,28 @@
 export interface GalleryItem {
   id: string
-  imageUrl: string
   title: string
   author: string
   authorAvatar: string
+  imageUrl: string
   likes: number
   views: number
   comments: number
   rating: number
-  borderColor: string
+  tags: string[]
 }
 
 export const galleryItems: GalleryItem[] = [
   {
     id: "1",
-    imageUrl: "/placeholder.svg",
-    title: "Blue Alien Executive",
-    author: "Rythak",
-    authorAvatar: "/placeholder.svg",
-    likes: 2058,
-    views: 675,
-    comments: 352,
-    rating: 4.9,
-    borderColor: "border-blue-500",
+    title: "WAI-NSFW-illustrious-SDXL",
+    author: "WAI",
+    authorAvatar: "https://example.com/avatar1.jpg",
+    imageUrl: "https://example.com/image1.jpg",
+    likes: 1234,
+    views: 5678,
+    comments: 123,
+    rating: 4.5,
+    tags: ["SDXL", "NSFW", "Illustration"]
   },
   {
     id: "2",

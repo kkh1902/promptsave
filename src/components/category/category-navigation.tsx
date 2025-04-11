@@ -64,25 +64,27 @@ export function CategoryNavigation() {
   ]
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 hidden md:flex h-10 items-center border-t">
-      <nav className="flex items-center space-x-4 w-full">
-        <div className="flex items-center space-x-4">
-          {navItems.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={`flex items-center text-sm font-medium transition-all duration-200 ease-in-out ${
-                pathname === item.href
-                  ? "text-foreground bg-muted/80 hover:bg-muted px-3 py-1.5 rounded-md shadow-sm"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50 px-3 py-1.5 rounded-md"
-              }`}
-            >
-              {item.icon}
-              {item.name}
-            </Link>
-          ))}
-        </div>
-      </nav>
+    <div className="border-t border-border/40 bg-zinc-900/50">
+      <div className="flex h-11 items-center px-6">
+        <nav className="flex items-center w-full">
+          <div className="flex items-center gap-2">
+            {navItems.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`flex items-center text-sm font-medium transition-all duration-200 ease-in-out ${
+                  pathname === item.href
+                    ? "text-foreground bg-zinc-800/80 hover:bg-zinc-800 px-3 py-1.5 rounded-full shadow-sm"
+                    : "text-muted-foreground hover:text-foreground hover:bg-zinc-800/50 px-3 py-1.5 rounded-full"
+                }`}
+              >
+                {item.icon}
+                {item.name}
+              </Link>
+            ))}
+          </div>
+        </nav>
+      </div>
     </div>
   )
 } 
