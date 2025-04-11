@@ -16,7 +16,10 @@ import {
   FileText,
   Trophy,
   Code,
+  Bell,
+  User,
 } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -80,15 +83,69 @@ export function Navigation() {
         </div>
 
         {/* Actions */}
-        <div className="flex items-center space-x-2">
-          <Button variant="ghost" size="icon" className="hidden md:flex transition-all duration-200 ease-in-out hover:bg-muted/80">
-            <LogIn className="h-5 w-5 transition-transform duration-200 hover:scale-110" />
-            <span className="sr-only">Sign In</span>
-          </Button>
-          <Button className="hidden md:flex transition-all duration-200 ease-in-out hover:bg-primary/90">
-            <PenTool className="mr-2 h-4 w-4 transition-transform duration-200" />
-            Create
-          </Button>
+        <div className="flex items-center space-x-3">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="hidden md:flex transition-all duration-200 ease-in-out hover:bg-primary/90">
+                <PenTool className="mr-2 h-4 w-4 transition-transform duration-200" />
+                Create
+                <ChevronDown className="ml-2 h-4 w-4 transition-transform duration-200" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem>
+                <ImageIcon className="mr-2 h-4 w-4" />
+                Upload Image
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Video className="mr-2 h-4 w-4" />
+                Upload Video
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <FileText className="mr-2 h-4 w-4" />
+                Create Post
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <div className="flex items-center space-x-2">
+            <Button variant="ghost" size="icon" className="relative hidden md:flex transition-all duration-200 ease-in-out hover:bg-muted/80">
+              <Bell className="h-5 w-5 transition-transform duration-200 hover:scale-110" />
+              <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-500 text-[10px] font-medium text-white flex items-center justify-center">1</span>
+              <span className="sr-only">Notifications</span>
+            </Button>
+
+            <Link href="/login" className="hidden md:block">
+              <Button variant="outline" className="flex items-center space-x-2">
+                <LogIn className="h-4 w-4" />
+                <span>로그인</span>
+              </Button>
+            </Link>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src="/placeholder-avatar.jpg" alt="Profile" />
+                    <AvatarFallback>AI</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem>
+                  <User className="mr-2 h-4 w-4" />
+                  프로필
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/login" className="w-full flex items-center">
+                    <LogIn className="mr-2 h-4 w-4" />
+                    로그인
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
           <Button
             variant="ghost"
             size="icon"
@@ -123,13 +180,21 @@ export function Navigation() {
               ))}
             </nav>
             <div className="mt-4 flex justify-between">
-              <Button variant="outline" className="w-full mr-2 transition-all duration-200 ease-in-out hover:bg-muted/80">
-                <LogIn className="mr-2 h-4 w-4 transition-transform duration-200" />
-                Sign In
+              <Link href="/login" className="w-full">
+                <Button variant="outline" className="w-full transition-all duration-200 ease-in-out hover:bg-muted/80">
+                  <LogIn className="mr-2 h-4 w-4 transition-transform duration-200" />
+                  로그인
+                </Button>
+              </Link>
+            </div>
+            <div className="mt-4 flex justify-between space-x-2">
+              <Button variant="outline" className="flex-1 transition-all duration-200 ease-in-out hover:bg-muted/80">
+                <Bell className="mr-2 h-4 w-4 transition-transform duration-200" />
+                알림
               </Button>
-              <Button className="w-full ml-2 transition-all duration-200 ease-in-out hover:bg-primary/90">
-                <PenTool className="mr-2 h-4 w-4 transition-transform duration-200" />
-                Create
+              <Button variant="outline" className="flex-1 transition-all duration-200 ease-in-out hover:bg-muted/80">
+                <User className="mr-2 h-4 w-4 transition-transform duration-200" />
+                프로필
               </Button>
             </div>
           </div>
