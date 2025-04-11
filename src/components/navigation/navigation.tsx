@@ -109,11 +109,13 @@ export function Navigation() {
           </DropdownMenu>
 
           <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="icon" className="relative hidden md:flex transition-all duration-200 ease-in-out hover:bg-muted/80">
-              <Bell className="h-5 w-5 transition-transform duration-200 hover:scale-110" />
-              <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-500 text-[10px] font-medium text-white flex items-center justify-center">1</span>
-              <span className="sr-only">Notifications</span>
-            </Button>
+            <Link href="/notifications">
+              <Button variant="ghost" size="icon" className="relative hidden md:flex transition-all duration-200 ease-in-out hover:bg-muted/80">
+                <Bell className="h-5 w-5 transition-transform duration-200 hover:scale-110" />
+                <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-500 text-[10px] font-medium text-white flex items-center justify-center">1</span>
+                <span className="sr-only">알림</span>
+              </Button>
+            </Link>
 
             <Link href="/login" className="hidden md:block">
               <Button variant="outline" className="flex items-center space-x-2">
@@ -188,10 +190,12 @@ export function Navigation() {
               </Link>
             </div>
             <div className="mt-4 flex justify-between space-x-2">
-              <Button variant="outline" className="flex-1 transition-all duration-200 ease-in-out hover:bg-muted/80">
-                <Bell className="mr-2 h-4 w-4 transition-transform duration-200" />
-                알림
-              </Button>
+              <Link href="/notifications" className="flex-1">
+                <Button variant="outline" className="w-full transition-all duration-200 ease-in-out hover:bg-muted/80">
+                  <Bell className="mr-2 h-4 w-4 transition-transform duration-200" />
+                  알림
+                </Button>
+              </Link>
               <Button variant="outline" className="flex-1 transition-all duration-200 ease-in-out hover:bg-muted/80">
                 <User className="mr-2 h-4 w-4 transition-transform duration-200" />
                 프로필
