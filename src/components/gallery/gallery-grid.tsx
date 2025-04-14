@@ -1,5 +1,5 @@
 import { GalleryItem } from "./gallery-item"
-import { GalleryItem as GalleryItemType } from "@/hooks/useGalleryQuery"
+import { GalleryItem as GalleryItemType } from "@/hooks/useGallery"
 import { motion, AnimatePresence } from "framer-motion"
 
 interface GalleryGridProps {

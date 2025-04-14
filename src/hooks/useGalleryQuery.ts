@@ -2,21 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-
-export interface GalleryItem {
-  id: string
-  title: string
-  content: string
-  image_urls?: string[] | null
-  category: string
-  created_at: string
-  user_id: string
-  tags: string[]
-  likes_count: number
-  views_count: number
-  comments_count: number
-  status: string
-}
+import { GalleryItem } from './useGallery'
 
 // 타입에 따른 테이블 이름 가져오기
 function getTableName(type: string): string {

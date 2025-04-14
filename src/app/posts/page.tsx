@@ -19,6 +19,7 @@ import { GallerySkeleton } from "@/components/gallery/gallery-skeleton"
 import { CategoryNavigation } from "@/components/category/category-navigation"
 import { Filter } from "@/components/filter/filter"
 import { useGalleryQuery, useFilteredGalleryItems } from "@/hooks/useGalleryQuery"
+import { useGallery } from "@/hooks/useGallery"
 
 export default function PostsPage() {
   const searchParams = useSearchParams();
@@ -30,10 +31,17 @@ export default function PostsPage() {
     tagParam ? tagParam.split(',') : []
   );
   
+  // 백업 데이터
+  const { items: backupItems } = useGallery(selectedCategory, 'post');
+  
+  // React Query로 데이터 가져오기
   const { data: galleryItems = [], isLoading, isError, error } = useGalleryQuery(selectedCategory, 'post');
+
+  // 데이터가 있으면 React Query의 데이터를 사용하고, 없으면 백업 데이터 사용
+  const items = galleryItems.length > 0 ? galleryItems : backupItems;
   
   // 태그 필터링된 아이템
-  const filteredItems = useFilteredGalleryItems(galleryItems, selectedTags);
+  const filteredItems = useFilteredGalleryItems(items, selectedTags);
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
