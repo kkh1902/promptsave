@@ -11,6 +11,7 @@ const supabase = createClient(
 )
 
 interface AuthContextType extends AuthState {
+  isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>
   logout: () => Promise<void>
   refreshToken: () => Promise<void>
@@ -123,7 +124,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ ...state, login, logout, refreshToken }}>
+    <AuthContext.Provider value={{ ...state, isAuthenticated: state.isAuthenticated, login, logout, refreshToken }}>
       {children}
     </AuthContext.Provider>
   )

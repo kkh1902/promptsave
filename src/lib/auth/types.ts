@@ -1,7 +1,9 @@
 export interface User {
   id: string;
-  email: string;
-  name: string;
+  email?: string;
+  user_metadata?: {
+    [key: string]: any;
+  };
 }
 
 export interface AuthTokens {
