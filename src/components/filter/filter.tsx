@@ -45,6 +45,7 @@ import {
   Clock,
   Bot as AI
 } from "lucide-react"
+import { useRouter, useSearchParams } from "next/navigation"
 
 const modelCategories = [
   { name: "ALL", icon: AI },
@@ -130,12 +131,17 @@ const challengeCategories = [
 ]
 
 interface FilterProps {
-  type: 'model' | 'image' | 'post' | 'development' | 'challenge' | 'video'
+  type?: 'model' | 'image' | 'video' | 'post' | 'development' | 'challenge' | 'shop'
   onCategoryChange?: (category: string) => void
 }
 
 export function Filter({ type = 'model', onCategoryChange }: FilterProps) {
-  const [selectedCategory, setSelectedCategory] = useState("ALL")
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [selectedCategory, setSelectedCategory] = useState(() => {
+    // URL에서 카테고리 정보를 가져옴
+    return searchParams.get('category') || "ALL";
+  });
   const [showLeftArrow, setShowLeftArrow] = useState(false)
   const [showRightArrow, setShowRightArrow] = useState(true)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
@@ -151,8 +157,21 @@ export function Filter({ type = 'model', onCategoryChange }: FilterProps) {
     : challengeCategories
 
   const handleCategoryChange = (category: string) => {
-    onCategoryChange?.(category)
-    setSelectedCategory(category)
+    // URL 업데이트
+    const params = new URLSearchParams(searchParams.toString());
+    if (category === "ALL") {
+      params.delete('category');
+    } else {
+      params.set('category', category);
+    }
+    
+    // URL 변경
+    router.push(`?${params.toString()}`);
+    
+    // 부모 컴포넌트 함수 호출
+    onCategoryChange?.(category);
+    // 로컬 상태 업데이트
+    setSelectedCategory(category);
   }
 
   const checkScroll = () => {

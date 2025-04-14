@@ -2,6 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { Heart, Eye, MessageSquare, MoreVertical } from "lucide-react"
+import { useRouter, usePathname, useSearchParams } from "next/navigation"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -23,6 +24,9 @@ interface GalleryItemProps {
 export function GalleryItem({ item }: GalleryItemProps) {
   const [userName, setUserName] = useState('User')
   const [avatarUrl, setAvatarUrl] = useState('')
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -51,6 +55,29 @@ export function GalleryItem({ item }: GalleryItemProps) {
   const thumbnailUrl = item.image_urls && item.image_urls.length > 0 
     ? item.image_urls[0] 
     : 'https://images.unsplash.com/photo-1635776062129-a74c10350adf?q=80&w=1032&auto=format&fit=crop'
+
+  // 태그 클릭 핸들러
+  const handleTagClick = (e: React.MouseEvent, tag: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const params = new URLSearchParams(searchParams.toString());
+    const currentTags = params.get('tags');
+    
+    if (currentTags) {
+      // 이미 선택된 태그들이 있는 경우
+      const tagArray = currentTags.split(',');
+      if (!tagArray.includes(tag)) {
+        tagArray.push(tag);
+        params.set('tags', tagArray.join(','));
+      }
+    } else {
+      // 선택된 태그가 없는 경우
+      params.set('tags', tag);
+    }
+    
+    router.push(`${pathname}?${params.toString()}`);
+  };
 
   return (
     <motion.div
@@ -93,7 +120,12 @@ export function GalleryItem({ item }: GalleryItemProps) {
           </div>
           <div className="flex flex-wrap gap-2 mb-4">
             {item.tags && item.tags.map((tag, index) => (
-              <Badge key={index} variant="secondary" className="px-2 py-0 text-xs">
+              <Badge 
+                key={index} 
+                variant="secondary" 
+                className="px-2 py-0 text-xs cursor-pointer hover:bg-primary/20"
+                onClick={(e) => handleTagClick(e, tag)}
+              >
                 {tag}
               </Badge>
             ))}

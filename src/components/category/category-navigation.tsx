@@ -22,7 +22,7 @@ interface NavItem {
 }
 
 interface CategoryNavigationProps {
-  type?: 'model' | 'image' | 'video' | 'post' | 'development' | 'challenge'
+  type?: 'model' | 'image' | 'video' | 'post' | 'development' | 'challenge' | 'shop'
   selectedCategory: string
   onCategoryChange: (category: string) => void
 }

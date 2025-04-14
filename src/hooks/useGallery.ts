@@ -44,7 +44,13 @@ export function useGallery(category: string = "ALL", type: string = 'post') {
             tableName = 'videos';
             break;
           case 'model':
-            tableName = 'models';
+            tableName = 'ai_models';
+            break;
+          case 'challenge':
+            tableName = 'challenges';
+            break;
+          case 'shop':
+            tableName = 'shop_items';
             break;
           default:
             tableName = 'posts';
