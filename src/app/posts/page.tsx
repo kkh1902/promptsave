@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { Heart, Eye, MessageSquare, Star, MoreVertical } from "lucide-react"
 import { useSearchParams } from "next/navigation"
 
@@ -15,9 +15,10 @@ import { Navigation } from "@/components/navigation/navigation"
 import { Banner } from "@/components/banner/banner"
 import { Footer } from "@/components/footer/footer"
 import { GalleryGrid } from "@/components/gallery/gallery-grid"
+import { GallerySkeleton } from "@/components/gallery/gallery-skeleton"
 import { CategoryNavigation } from "@/components/category/category-navigation"
 import { Filter } from "@/components/filter/filter"
-import { useGallery } from "@/hooks/useGallery"
+import { useGalleryQuery, useFilteredGalleryItems } from "@/hooks/useGalleryQuery"
 
 export default function PostsPage() {
   const searchParams = useSearchParams();
@@ -29,16 +30,10 @@ export default function PostsPage() {
     tagParam ? tagParam.split(',') : []
   );
   
-  const { items: galleryItems, loading, error } = useGallery(selectedCategory, 'post');
-
+  const { data: galleryItems = [], isLoading, isError, error } = useGalleryQuery(selectedCategory, 'post');
+  
   // 태그 필터링된 아이템
-  const filteredItems = selectedTags.length > 0 
-    ? galleryItems.filter(item => {
-        return selectedTags.some(tag => 
-          item.tags && item.tags.includes(tag)
-        );
-      })
-    : galleryItems;
+  const filteredItems = useFilteredGalleryItems(galleryItems, selectedTags);
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
@@ -58,18 +53,10 @@ export default function PostsPage() {
     }
   }, [searchParams]);
 
-  if (loading) {
+  if (isError) {
     return (
       <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
-        <p>Loading...</p>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
-        <p>Error: {error}</p>
+        <p>Error: {error instanceof Error ? error.message : 'An error occurred'}</p>
       </div>
     )
   }
@@ -134,7 +121,30 @@ export default function PostsPage() {
         {/* Gallery */}
         <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1">
           <Filter type="post" onCategoryChange={handleCategoryChange} />
-          <GalleryGrid items={filteredItems} />
+          
+          <AnimatePresence mode="wait">
+            {isLoading ? (
+              <motion.div
+                key="loading"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <GallerySkeleton />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="content"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <GalleryGrid items={filteredItems} />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </main>
 
         {/* Footer */}
