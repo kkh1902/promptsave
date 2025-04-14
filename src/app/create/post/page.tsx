@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
 import { createClient } from '@supabase/supabase-js'
+import Image from "next/image"
 
 // Supabase 클라이언트 직접 초기화
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
@@ -249,7 +250,7 @@ export default function CreatePostPage() {
       <Navigation />
       <CategoryNavigation type="post" selectedCategory={selectedCategory} onCategoryChange={setSelectedCategory} />
       
-      <main className="container mx-auto px-4 py-8 max-w-4xl">
+      <main className="mx-auto px-0 sm:px-2 md:px-4 lg:px-6 py-2 max-w-7xl w-full">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <Link href="/">
