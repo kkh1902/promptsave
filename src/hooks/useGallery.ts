@@ -16,7 +16,7 @@ export interface GalleryItem {
   status: string
 }
 
-export function useGallery(category: string = "ALL") {
+export function useGallery(category: string = "ALL", type: string = 'post') {
   const [items, setItems] = useState<GalleryItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -27,10 +27,33 @@ export function useGallery(category: string = "ALL") {
         setLoading(true)
         setError(null)
 
-        console.log('Fetching posts with params:', { category })
+        // 콘텐츠 타입에 따라 다른 테이블 선택
+        let tableName: string;
+        
+        switch (type) {
+          case 'post':
+            tableName = 'posts';
+            break;
+          case 'development':
+            tableName = 'development_posts';
+            break;
+          case 'image':
+            tableName = 'images';
+            break;
+          case 'video':
+            tableName = 'videos';
+            break;
+          case 'model':
+            tableName = 'models';
+            break;
+          default:
+            tableName = 'posts';
+        }
+
+        console.log(`Fetching items from ${tableName} with category:`, { category });
 
         let query = supabase
-          .from('posts')
+          .from(tableName)
           .select('*')
           .eq('status', 'published')
           .order('created_at', { ascending: false })
@@ -51,7 +74,7 @@ export function useGallery(category: string = "ALL") {
           throw queryError
         }
 
-        console.log('Fetched posts data:', data)
+        console.log(`Fetched data from ${tableName}:`, data);
         setItems(data || [])
       } catch (err) {
         console.error('Error in fetchItems:', {
@@ -66,7 +89,7 @@ export function useGallery(category: string = "ALL") {
     }
 
     fetchItems()
-  }, [category])
+  }, [category, type])
 
   return { items, loading, error }
 } 

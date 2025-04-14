@@ -151,8 +151,8 @@ export function Filter({ type = 'model', onCategoryChange }: FilterProps) {
     : challengeCategories
 
   const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category)
     onCategoryChange?.(category)
+    setSelectedCategory(category)
   }
 
   const checkScroll = () => {
@@ -178,6 +178,33 @@ export function Filter({ type = 'model', onCategoryChange }: FilterProps) {
         behavior: 'smooth'
       })
     }
+  }
+
+  let tableName: string
+  switch (type) {
+    case 'post':
+      tableName = 'posts';
+      break;
+    case 'development':
+      tableName = 'development_posts';
+      break;
+    case 'image':
+      tableName = 'images';
+      break;
+    case 'video':
+      tableName = 'videos';
+      break;
+    case 'model':
+      tableName = 'ai_models'; // 나중에 생성할 예정
+      break;
+    case 'challenge':
+      tableName = 'challenges';
+      break;
+    case 'shop':
+      tableName = 'shop_items';
+      break;
+    default:
+      tableName = 'posts';
   }
 
   return (

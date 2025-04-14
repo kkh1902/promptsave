@@ -46,7 +46,11 @@ export default function ImagesPage() {
     <ThemeProvider defaultTheme="dark" attribute="class">
       <div className="min-h-screen bg-background text-foreground flex flex-col">
         <Navigation />
-        <CategoryNavigation />
+        <CategoryNavigation 
+          selectedCategory={selectedCategory}
+          onCategoryChange={handleCategoryChange}
+          type="image"
+        />
 
         {/* Featured Banner */}
         <Banner
