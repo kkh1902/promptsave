@@ -21,7 +21,13 @@ interface NavItem {
   icon?: React.ReactNode
 }
 
-export function CategoryNavigation() {
+interface CategoryNavigationProps {
+  type?: 'model' | 'image' | 'video' | 'post' | 'development' | 'challenge'
+  selectedCategory: string
+  onCategoryChange: (category: string) => void
+}
+
+export function CategoryNavigation({ type, selectedCategory, onCategoryChange }: CategoryNavigationProps) {
   const pathname = usePathname()
 
   const navItems: NavItem[] = [
