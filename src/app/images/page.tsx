@@ -62,7 +62,7 @@ export default function ImagesPage() {
         {/* Gallery */}
         <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1">
           <Filter type="image" onCategoryChange={handleCategoryChange} />
-          <GalleryGrid items={galleryItems} />
+          <GalleryGrid items={galleryItems} type="image" />
         </main>
 
         {/* Footer */}

@@ -55,7 +55,7 @@ export default function ShopPage() {
     
     if (tags) {
       setSelectedTags(tags.split(','));
-    }
+  }
   }, [searchParams]);
 
   if (loading) {

@@ -19,9 +19,10 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 interface GalleryItemProps {
   item: GalleryItemType
+  type?: string // 콘텐츠 타입 추가 (post, image, video 등)
 }
 
-export function GalleryItem({ item }: GalleryItemProps) {
+export function GalleryItem({ item, type = 'post' }: GalleryItemProps) {
   const [userName, setUserName] = useState('User')
   const [avatarUrl, setAvatarUrl] = useState('')
   const router = useRouter();
@@ -79,6 +80,47 @@ export function GalleryItem({ item }: GalleryItemProps) {
     router.push(`${pathname}?${params.toString()}`);
   };
 
+  // 아이템 타입에 따라 다른 상세 페이지 경로 결정
+  const getDetailPageUrl = () => {
+    // 먼저 item의 type 속성을 확인 (데이터에 타입 정보가 있는 경우)
+    let contentType = item.type || type;
+    
+    // 경로에서 타입 추론 (pathname이 /images, /videos 등이면 그에 맞게 설정)
+    if (pathname.includes('/images')) {
+      contentType = 'image';
+    } else if (pathname.includes('/videos')) {
+      contentType = 'video';
+    } else if (pathname.includes('/posts')) {
+      contentType = 'post';
+    }
+    
+    // 아이템 ID가 없는 경우 기본 경로로 리디렉션
+    if (!item.id) {
+      console.error('아이템 ID가 없습니다:', item);
+      return '/';
+    }
+    
+    switch (contentType) {
+      case 'image':
+        return `/image/${item.id}`;
+      case 'video':
+        return `/video/${item.id}`;
+      case 'model':
+        return `/model/${item.id}`;
+      case 'development':
+        return `/development/${item.id}`;
+      case 'challenge':
+        return `/challenge/${item.id}`;
+      case 'shop':
+        return `/shop/${item.id}`;
+      case 'post':
+      default:
+        return `/post/${item.id}`;
+    }
+  };
+
+  const detailPageUrl = getDetailPageUrl();
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -86,7 +128,7 @@ export function GalleryItem({ item }: GalleryItemProps) {
       transition={{ duration: 0.3 }}
     >
       <Card className="overflow-hidden">
-        <Link href={`/post/${item.id}`}>
+        <Link href={detailPageUrl}>
           <div className="aspect-video relative overflow-hidden">
             <Image
               src={thumbnailUrl}
@@ -99,7 +141,7 @@ export function GalleryItem({ item }: GalleryItemProps) {
         </Link>
         <CardContent className="p-4">
           <div className="flex items-start justify-between mb-2">
-            <Link href={`/post/${item.id}`}>
+            <Link href={detailPageUrl}>
               <h3 className="font-semibold text-lg line-clamp-2 hover:text-primary">
                 {item.title}
               </h3>

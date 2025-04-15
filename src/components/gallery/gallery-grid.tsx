@@ -4,9 +4,10 @@ import { motion, AnimatePresence } from "framer-motion"
 
 interface GalleryGridProps {
   items: GalleryItemType[]
+  type?: string
 }
 
-export function GalleryGrid({ items }: GalleryGridProps) {
+export function GalleryGrid({ items, type = 'post' }: GalleryGridProps) {
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
       <AnimatePresence>
@@ -22,7 +23,7 @@ export function GalleryGrid({ items }: GalleryGridProps) {
               ease: "easeOut"
             }}
           >
-            <GalleryItem item={item} />
+            <GalleryItem item={item} type={type} />
           </motion.div>
         ))}
       </AnimatePresence>

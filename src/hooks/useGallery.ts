@@ -14,6 +14,7 @@ export interface GalleryItem {
   views_count: number
   comments_count: number
   status: string
+  type?: string
 }
 
 export function useGallery(category: string = "ALL", type: string = 'post') {
@@ -81,7 +82,14 @@ export function useGallery(category: string = "ALL", type: string = 'post') {
         }
 
         console.log(`Fetched data from ${tableName}:`, data);
-        setItems(data || [])
+        
+        // 불러온 데이터에 type 속성 추가하기
+        const itemsWithType = data ? data.map(item => ({
+          ...item,
+          type: type // 현재 함수에 전달된 type 파라미터 사용
+        })) : [];
+        
+        setItems(itemsWithType)
       } catch (err) {
         console.error('Error in fetchItems:', {
           error: err,

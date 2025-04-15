@@ -158,45 +158,25 @@ export default function PostPage() {
     });
   };
 
-  // 스크롤 이동 함수 개선 - 하이라이트 효과 제거
+  // 스크롤 이동 함수 수정
   const scrollToHeader = (id: string, e: React.MouseEvent) => {
     e.preventDefault();
     
+    // contentRef가 참조하는 요소 내에서 id 값을 가진 요소 찾기
     if (contentRef.current) {
       const element = contentRef.current.querySelector(`#${id}`);
       
       if (element) {
-        // 현재 스크롤 위치
-        const startPosition = window.pageYOffset;
-        // 타겟 요소의 위치 (헤더 상단 여백 80px 적용)
-        const targetPosition = (element as HTMLElement).getBoundingClientRect().top + window.pageYOffset - 80;
-        // 이동할 거리
-        const distance = targetPosition - startPosition;
+        // 부드러운 스크롤 효과와 함께 약간의 상단 여백 추가
+        element.scrollIntoView({ behavior: 'smooth' });
+        // 헤더가 화면 상단에 너무 붙지 않도록 약간의 오프셋 적용
+        window.scrollBy(0, -80);
         
-        // 스크롤 애니메이션 설정
-        const duration = 800; // 애니메이션 지속 시간 (ms)
-        let start: number | null = null;
-        
-        // 애니메이션 함수
-        function step(timestamp: number) {
-          if (!start) start = timestamp;
-          const progress = timestamp - start;
-          const percentage = Math.min(progress / duration, 1);
-          
-          // 이징 함수 적용 (easeInOutQuad)
-          const easing = percentage < 0.5
-            ? 2 * percentage * percentage
-            : 1 - Math.pow(-2 * percentage + 2, 2) / 2;
-          
-          window.scrollTo(0, startPosition + distance * easing);
-          
-          if (progress < duration) {
-            window.requestAnimationFrame(step);
-          }
-        }
-        
-        // 애니메이션 시작
-        window.requestAnimationFrame(step);
+        // 시각적 효과: 헤더 강조 표시 후 페이드 아웃
+        element.classList.add('highlight-header');
+        setTimeout(() => {
+          element.classList.remove('highlight-header');
+        }, 2000);
       } else {
         console.error(`Element with id ${id} not found`);
       }
@@ -469,11 +449,8 @@ export default function PostPage() {
             </div>
 
             {/* Sidebar - 고정 상태로 스크롤 */}
-            <div 
-              className="w-full lg:w-[400px] flex-[1] lg:sticky lg:top-20 lg:self-start"
-              style={{ maxHeight: 'calc(100vh - 120px)', overflowY: 'auto' }}
-            >
-              <div className="space-y-4 flex flex-col">
+            <div className="w-full lg:w-[400px] flex-[1] lg:sticky lg:top-4 lg:self-start" >
+              <div className="space-y-4 h-full flex flex-col">
                 <Card className="bg-[#1a1a1a] border-gray-700 rounded-xl overflow-hidden">
                   <CardContent className="p-3">
                     <div className="flex items-center justify-between mb-2">
@@ -494,7 +471,7 @@ export default function PostPage() {
                     </div>
 
                     {isTableExpanded && (
-                      <nav className="space-y-1 text-xs max-h-[25vh] overflow-y-auto pr-2 custom-scrollbar">
+                      <nav className="space-y-1 text-xs max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
                         {post.warning && (
                           <div className="text-red-400 mb-1 p-1.5 bg-red-900/20 rounded-lg text-xs">
                             {post.warning}
@@ -552,7 +529,7 @@ export default function PostPage() {
                 <Card className="bg-[#1a1a1a] border-gray-700 rounded-xl overflow-hidden">
                   <CardContent className="p-0">
                     {/* 커버 이미지 */}
-                    <div className="relative h-16 w-full bg-gradient-to-r from-blue-900 to-purple-900">
+                    <div className="relative h-24 w-full bg-gradient-to-r from-blue-900 to-purple-900">
                       {post.cover_image_url && (
                         <Image
                           src={post.cover_image_url}
@@ -567,8 +544,8 @@ export default function PostPage() {
                     {/* 프로필 정보 */}
                     <div className="p-3 relative">
                       {/* 프로필 이미지 - 커버 이미지와 겹치게 */}
-                      <div className="absolute -top-8 left-3">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-base font-medium border-2 border-[#1a1a1a] overflow-hidden">
+                      <div className="absolute -top-10 left-3">
+                        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-base font-medium border-3 border-[#1a1a1a] overflow-hidden">
                           {author?.avatar_url ? (
                             <Image
                               src={author.avatar_url}
@@ -583,7 +560,7 @@ export default function PostPage() {
                       </div>
                       
                       {/* 유저 정보 */}
-                      <div className="mt-4 pt-0">
+                      <div className="mt-6 pt-0">
                         <div className="flex justify-between items-start">
                           <div>
                             <h3 className="font-bold text-base text-white">{author?.username || '알 수 없는 사용자'}</h3>
@@ -623,8 +600,17 @@ export default function PostPage() {
 
         <Footer />
 
-        {/* 스크롤 효과용 글로벌 스타일 추가 - 하이라이트 부분 제거 */}
+        {/* 스크롤 효과용 글로벌 스타일 추가 */}
         <style jsx global>{`
+          .highlight-header {
+            animation: highlight-fade 2s ease-out;
+          }
+          
+          @keyframes highlight-fade {
+            0% { background-color: rgba(59, 130, 246, 0.2); }
+            100% { background-color: transparent; }
+          }
+          
           .custom-scrollbar::-webkit-scrollbar {
             width: 5px;
           }

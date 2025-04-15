@@ -149,7 +149,7 @@ export default function VideosPage() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <GalleryGrid items={filteredItems} />
+                <GalleryGrid items={filteredItems} type="video" />
               </motion.div>
             )}
           </AnimatePresence>
