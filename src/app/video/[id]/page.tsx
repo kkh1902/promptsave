@@ -118,6 +118,17 @@ export default function VideoDetailPage() {
     }
   }, [videoId])
 
+  useEffect(() => {
+    if (isLoading) {
+      const timeout = setTimeout(() => {
+        setError('데이터 로딩 시간이 너무 오래 걸립니다. 네트워크 연결을 확인해주세요.');
+        setIsLoading(false);
+      }, 15000); // 15초 후 타임아웃
+
+      return () => clearTimeout(timeout);
+    }
+  }, [isLoading]);
+
   // 비디오 플레이어 컨트롤 기능
   const togglePlay = () => {
     if (videoRef.current) {

@@ -5,9 +5,12 @@ import { motion, AnimatePresence } from "framer-motion"
 interface GalleryGridProps {
   items: GalleryItemType[]
   type?: string
+  currentUser: any;
+  onDeleteItem?: (itemId: string, itemType: string) => Promise<any>;
+  onEditItem?: (itemId: string, itemType: string) => void;
 }
 
-export function GalleryGrid({ items, type = 'post' }: GalleryGridProps) {
+export function GalleryGrid({ items, type = 'post', currentUser, onDeleteItem, onEditItem }: GalleryGridProps) {
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
       <AnimatePresence>
@@ -23,7 +26,13 @@ export function GalleryGrid({ items, type = 'post' }: GalleryGridProps) {
               ease: "easeOut"
             }}
           >
-            <GalleryItem item={item} type={type} />
+            <GalleryItem 
+              item={item} 
+              type={type} 
+              currentUser={currentUser}
+              onDeleteItem={onDeleteItem}
+              onEditItem={onEditItem}
+            />
           </motion.div>
         ))}
       </AnimatePresence>
