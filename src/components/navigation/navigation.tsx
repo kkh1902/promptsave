@@ -168,6 +168,12 @@ export function Navigation() {
                     로그인
                   </Link>
                 </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/signout" className="w-full flex items-center">
+                    <LogIn className="mr-2 h-4 w-4" />
+                    회원 탈퇴
+                  </Link>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

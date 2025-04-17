@@ -8,13 +8,14 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Navigation } from "@/components/navigation/navigation"
 import { CategoryNavigation } from "@/components/category/category-navigation"
-import { supabase } from "@/lib/supabase"
 import { toast } from "sonner"
+import { registerUser } from "@/lib/auth"
 
 export default function RegisterPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState("")
+  const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [isEmailSent, setIsEmailSent] = useState(false)
@@ -23,18 +24,6 @@ export default function RegisterPage() {
     e.preventDefault()
     setIsLoading(true)
 
-    if (!email || !password) {
-      toast.error("이메일과 비밀번호를 모두 입력해주세요.")
-      setIsLoading(false)
-      return
-    }
-
-    if (password.length < 6) {
-      toast.error("비밀번호는 최소 6자 이상이어야 합니다.")
-      setIsLoading(false)
-      return
-    }
-
     if (password !== confirmPassword) {
       toast.error("비밀번호가 일치하지 않습니다.")
       setIsLoading(false)
@@ -42,32 +31,27 @@ export default function RegisterPage() {
     }
 
     try {
-      const { data, error } = await supabase.auth.signUp({
+      const result = await registerUser({
         email,
         password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`
-        }
-      })
+        username: username || email.split('@')[0],
+        redirectTo: `${window.location.origin}/auth/callback`
+      });
 
-      if (error) {
-        if (error.message.includes("already registered")) {
-          toast.error("이미 등록된 이메일입니다.")
-        } else {
-          toast.error(error.message)
-        }
-        return
+      if (!result.success) {
+        toast.error(result.error);
+        return;
       }
 
-      if (data?.user) {
-        setIsEmailSent(true)
-        toast.success("확인 이메일이 발송되었습니다. 이메일을 확인해주세요.")
+      if (result.user) {
+        setIsEmailSent(true);
+        toast.success(result.message);
       }
     } catch (error) {
-      console.error("Registration error:", error)
-      toast.error("회원가입 중 오류가 발생했습니다.")
+      console.error("Registration error:", error);
+      toast.error("회원가입 중 오류가 발생했습니다.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 
@@ -135,7 +119,25 @@ export default function RegisterPage() {
                     disabled={isLoading}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    required
                   />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="username">사용자 이름</Label>
+                  <Input
+                    id="username"
+                    placeholder="username"
+                    type="text"
+                    autoCapitalize="none"
+                    autoComplete="username"
+                    autoCorrect="off"
+                    disabled={isLoading}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    입력하지 않으면 이메일에서 자동 생성됩니다
+                  </p>
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="password">비밀번호</Label>
@@ -147,6 +149,8 @@ export default function RegisterPage() {
                     disabled={isLoading}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    required
+                    minLength={6}
                   />
                 </div>
                 <div className="grid gap-2">
@@ -159,6 +163,7 @@ export default function RegisterPage() {
                     disabled={isLoading}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
                   />
                 </div>
                 <Button type="submit" disabled={isLoading}>
