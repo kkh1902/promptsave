@@ -20,7 +20,7 @@ import { useGallery } from "@/hooks/useGallery"
 
 export default function DevelopmentPage() {
   const [selectedCategory, setSelectedCategory] = useState("ALL")
-  const { items: galleryItems, loading, error } = useGallery(selectedCategory)
+  const { items: galleryItems, loading, error } = useGallery(selectedCategory, 'development')
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category)
@@ -46,7 +46,11 @@ export default function DevelopmentPage() {
     <ThemeProvider defaultTheme="dark" attribute="class">
       <div className="min-h-screen bg-background text-foreground flex flex-col">
         <Navigation />
-        <CategoryNavigation />
+        <CategoryNavigation 
+          selectedCategory={selectedCategory}
+          onCategoryChange={handleCategoryChange}
+          type="development"
+        />
 
         {/* Featured Banner */}
         <Banner

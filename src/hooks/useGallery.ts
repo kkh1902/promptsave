@@ -4,21 +4,20 @@ import { supabase } from '@/lib/supabase'
 export interface GalleryItem {
   id: string
   title: string
-  description: string
-  image_url: string
-  video_url?: string | null
-  media_type?: 'image' | 'video'
+  content: string
+  image_urls?: string[] | null
   category: string
   created_at: string
   user_id: string
-  likes: number
-  views: number
-  comments: number
-  user_name: string
-  user_avatar: string
+  tags: string[]
+  likes_count: number
+  views_count: number
+  comments_count: number
+  status: string
+  type?: string
 }
 
-export function useGallery(category: string = "ALL", mediaType?: 'image' | 'video') {
+export function useGallery(category: string = "ALL", type: string = 'post') {
   const [items, setItems] = useState<GalleryItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -29,23 +28,45 @@ export function useGallery(category: string = "ALL", mediaType?: 'image' | 'vide
         setLoading(true)
         setError(null)
 
-        console.log('Fetching gallery items with params:', { category, mediaType })
+        // 콘텐츠 타입에 따라 다른 테이블 선택
+        let tableName: string;
+        
+        switch (type) {
+          case 'post':
+            tableName = 'posts';
+            break;
+          case 'development':
+            tableName = 'development_posts';
+            break;
+          case 'image':
+            tableName = 'images';
+            break;
+          case 'video':
+            tableName = 'videos';
+            break;
+          case 'model':
+            tableName = 'ai_models';
+            break;
+          case 'challenge':
+            tableName = 'challenges';
+            break;
+          case 'shop':
+            tableName = 'shop_items';
+            break;
+          default:
+            tableName = 'posts';
+        }
+
+        console.log(`Fetching items from ${tableName} with category:`, { category });
 
         let query = supabase
-          .from('gallery_items')
+          .from(tableName)
           .select('*')
+          .eq('status', 'published')
           .order('created_at', { ascending: false })
 
         if (category !== "ALL") {
           query = query.eq('category', category)
-        }
-
-        if (mediaType) {
-          try {
-            query = query.eq('media_type', mediaType)
-          } catch (err) {
-            console.warn('media_type 필터링을 건너뜁니다:', err)
-          }
         }
 
         const { data, error: queryError } = await query
@@ -60,13 +81,15 @@ export function useGallery(category: string = "ALL", mediaType?: 'image' | 'vide
           throw queryError
         }
 
-        const processedData = data?.map(item => ({
+        console.log(`Fetched data from ${tableName}:`, data);
+        
+        // 불러온 데이터에 type 속성 추가하기
+        const itemsWithType = data ? data.map(item => ({
           ...item,
-          video_url: item.video_url || null
-        })) || []
-
-        console.log('Fetched data:', processedData)
-        setItems(processedData)
+          type: type // 현재 함수에 전달된 type 파라미터 사용
+        })) : [];
+        
+        setItems(itemsWithType)
       } catch (err) {
         console.error('Error in fetchItems:', {
           error: err,
@@ -80,7 +103,7 @@ export function useGallery(category: string = "ALL", mediaType?: 'image' | 'vide
     }
 
     fetchItems()
-  }, [category, mediaType])
+  }, [category, type])
 
   return { items, loading, error }
 } 

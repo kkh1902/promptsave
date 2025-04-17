@@ -46,7 +46,11 @@ export default function ImagesPage() {
     <ThemeProvider defaultTheme="dark" attribute="class">
       <div className="min-h-screen bg-background text-foreground flex flex-col">
         <Navigation />
-        <CategoryNavigation />
+        <CategoryNavigation 
+          selectedCategory={selectedCategory}
+          onCategoryChange={handleCategoryChange}
+          type="image"
+        />
 
         {/* Featured Banner */}
         <Banner
@@ -58,7 +62,7 @@ export default function ImagesPage() {
         {/* Gallery */}
         <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1">
           <Filter type="image" onCategoryChange={handleCategoryChange} />
-          <GalleryGrid items={galleryItems} />
+          <GalleryGrid items={galleryItems} type="image" />
         </main>
 
         {/* Footer */}

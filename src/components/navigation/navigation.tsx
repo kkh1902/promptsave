@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useAuth } from "@/lib/auth/AuthContext"
 import {
   Search,
   Menu,
@@ -20,7 +21,6 @@ import {
   User,
 } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -36,18 +36,30 @@ const navItems = [
   { name: "Development", icon: <Code className="w-4 h-4 mr-2" />, href: "/development" },
   { name: "Challenges", icon: <Trophy className="w-4 h-4 mr-2" />, href: "/challenges" },
   { name: "Shop", icon: <ShoppingBag className="w-4 h-4 mr-2" />, href: "/shop" },
-]
+] as const
 
 export function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const { isAuthenticated, logout, user } = useAuth()
   const pathname = usePathname()
+
+  console.log('로그인 상태:', isAuthenticated);
+  console.log('사용자 정보:', user);
+
+  const handleAuth = async () => {
+    if (isAuthenticated) {
+      await logout()
+    } else {
+      window.location.href = "/login"
+    }
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-16 items-center px-6">
         {/* Logo */}
         <div className="mr-4 flex items-center">
-          <Link href="#" className="flex items-center">
+          <Link href="/" className="flex items-center">
             <span className="text-2xl font-bold bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent">
               CIVIT<span className="text-blue-500">AI</span>
             </span>
@@ -93,17 +105,23 @@ export function Navigation() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem>
-                <ImageIcon className="mr-2 h-4 w-4" />
-                Upload Image
+              <DropdownMenuItem asChild>
+                <Link href="/create/image" className="flex items-center">
+                  <ImageIcon className="mr-2 h-4 w-4" />
+                  Upload Image
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Video className="mr-2 h-4 w-4" />
-                Upload Video
+              <DropdownMenuItem asChild>
+                <Link href="/create/video" className="flex items-center">
+                  <Video className="mr-2 h-4 w-4" />
+                  Upload Video
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <FileText className="mr-2 h-4 w-4" />
-                Create Post
+              <DropdownMenuItem asChild>
+                <Link href="/create/post" className="flex items-center">
+                  <FileText className="mr-2 h-4 w-4" />
+                  Create Post
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -117,10 +135,14 @@ export function Navigation() {
               </Button>
             </Link>
 
-            <Link href="/login" className="hidden md:block">
-              <Button variant="outline" className="flex items-center space-x-2">
+            <Link href={isAuthenticated ? "#" : "/login"} className="hidden md:block">
+              <Button 
+                variant="outline" 
+                className="flex items-center space-x-2 hidden md:flex"
+                onClick={handleAuth}
+              >
                 <LogIn className="h-4 w-4" />
-                <span>로그인</span>
+                <span>{isAuthenticated ? "로그아웃" : "로그인"}</span>
               </Button>
             </Link>
 
@@ -134,9 +156,11 @@ export function Navigation() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem>
-                  <User className="mr-2 h-4 w-4" />
-                  프로필
+                <DropdownMenuItem asChild>
+                  <Link href="/profile" className="w-full flex items-center">
+                    <User className="mr-2 h-4 w-4" />
+                    프로필
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link href="/login" className="w-full flex items-center">
@@ -159,7 +183,6 @@ export function Navigation() {
           </Button>
         </div>
       </div>
-
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
@@ -196,10 +219,12 @@ export function Navigation() {
                   알림
                 </Button>
               </Link>
-              <Button variant="outline" className="flex-1 transition-all duration-200 ease-in-out hover:bg-muted/80">
-                <User className="mr-2 h-4 w-4 transition-transform duration-200" />
-                프로필
-              </Button>
+              <Link href="/profile" className="flex-1">
+                <Button variant="outline" className="w-full transition-all duration-200 ease-in-out hover:bg-muted/80">
+                  <User className="mr-2 h-4 w-4 transition-transform duration-200" />
+                  프로필
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
