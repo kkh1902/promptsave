@@ -15,12 +15,35 @@ export default function Auth() {
     setError(null)
 
     try {
-      const { error } = await supabase.auth.signUp({
+      // 1. Supabase 인증 시스템에 사용자 등록
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
       })
 
       if (error) throw error
+      
+      // 2. 인증 성공 후 users 테이블에 추가 정보 저장
+      if (data.user) {
+        const { error: insertError } = await supabase
+          .from('users')  // 'users' 테이블에 데이터 삽입
+          .insert([
+            { 
+              id: data.user.id,  // auth 시스템의 UUID를 사용
+              email: email,
+              username: email.split('@')[0],  // 이메일에서 username 생성
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+              // 여기에 필요한 다른 필드 추가 가능
+            }
+          ])
+        
+        if (insertError) {
+          console.error('사용자 정보 저장 중 오류:', insertError)
+          // 사용자 정보 저장 실패 처리 (선택 사항)
+        }
+      }
+
       alert('회원가입 이메일을 확인해주세요!')
     } catch (error: any) {
       setError(error.message)

@@ -1,7 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { Heart, Eye, MessageSquare, MoreVertical } from "lucide-react"
+import { Heart, Eye, MessageSquare, MoreVertical, Trash2, Pencil } from "lucide-react"
 import { useRouter, usePathname, useSearchParams } from "next/navigation"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -12,6 +12,13 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { GalleryItem as GalleryItemType } from "@/hooks/useGallery"
 import { createClient } from "@supabase/supabase-js"
 import { useState, useEffect } from "react"
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu"
+import { toast } from "sonner"
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
@@ -20,9 +27,12 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
 interface GalleryItemProps {
   item: GalleryItemType
   type?: string // 콘텐츠 타입 추가 (post, image, video 등)
+  currentUser: any
+  onDeleteItem?: (itemId: string, itemType: string) => Promise<any>
+  onEditItem?: (itemId: string, itemType: string) => void
 }
 
-export function GalleryItem({ item, type = 'post' }: GalleryItemProps) {
+export function GalleryItem({ item, type = 'post', currentUser, onDeleteItem, onEditItem }: GalleryItemProps) {
   const [userName, setUserName] = useState('User')
   const [avatarUrl, setAvatarUrl] = useState('')
   const router = useRouter();
@@ -121,13 +131,83 @@ export function GalleryItem({ item, type = 'post' }: GalleryItemProps) {
 
   const detailPageUrl = getDetailPageUrl();
 
+  const isOwner = currentUser?.id === item.user_id;
+
+  // 삭제 확인 및 실행 함수
+  const handleDeleteClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation(); // 링크 이동 방지
+    
+    if (!isOwner || !onDeleteItem) return;
+
+    // 간단한 확인 창 (AlertDialog 컴포넌트를 사용하는 것이 더 좋음)
+    if (window.confirm("정말 이 콘텐츠를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.")) {
+      const result = await onDeleteItem(item.id, item.type || type);
+      if (result.success) {
+        toast.success("콘텐츠가 삭제되었습니다.");
+        // 성공 시 GalleryGrid가 자동으로 리렌더링됨 (상태 변경으로 인해)
+      } else {
+        toast.error(`삭제 실패: ${result.error}`);
+      }
+    }
+  };
+
+  // 수정 페이지로 이동하는 함수
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!isOwner || !onEditItem) return;
+    
+    // GalleryItem 내부에서 직접 라우팅하거나, onEditItem prop을 통해 처리
+    // 여기서는 onEditItem prop을 호출하여 상위에서 처리하도록 함
+    onEditItem(item.id, item.type || type);
+    // 또는 직접 라우팅: 
+    // const editUrl = `/${item.type || type}/${item.id}/edit`; 
+    // router.push(editUrl);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <Card className="overflow-hidden">
+      <Card className="overflow-hidden group relative">
+        {isOwner && (onDeleteItem || onEditItem) && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                variant="destructive"
+                size="icon" 
+                className="absolute top-2 right-2 z-10 h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+              >
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {onEditItem && (
+                <DropdownMenuItem 
+                  onClick={handleEditClick} 
+                  className="cursor-pointer"
+                >
+                  <Pencil className="mr-2 h-4 w-4" />
+                  수정하기
+                </DropdownMenuItem>
+              )}
+              {onDeleteItem && (
+                <DropdownMenuItem 
+                  onClick={handleDeleteClick} 
+                  className="text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-900/50 cursor-pointer"
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  삭제하기
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
         <Link href={detailPageUrl}>
           <div className="aspect-video relative overflow-hidden">
             <Image
@@ -141,21 +221,11 @@ export function GalleryItem({ item, type = 'post' }: GalleryItemProps) {
         </Link>
         <CardContent className="p-4">
           <div className="flex items-start justify-between mb-2">
-            <Link href={detailPageUrl}>
+            <Link href={detailPageUrl} className="flex-1 mr-2">
               <h3 className="font-semibold text-lg line-clamp-2 hover:text-primary">
                 {item.title}
               </h3>
             </Link>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <MoreVertical className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Options</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
           </div>
           <div className="text-sm text-muted-foreground line-clamp-2 mb-3">
             {item.content}
