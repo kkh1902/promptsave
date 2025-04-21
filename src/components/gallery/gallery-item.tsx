@@ -6,7 +6,6 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { GalleryItem as GalleryItemType } from "@/hooks/useGallery"
@@ -25,8 +24,8 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 interface GalleryItemProps {
-  item: GalleryItemType
-  type?: string // 콘텐츠 타입 추가 (post, image, video 등)
+  item: GalleryItemType & { width?: number; height?: number };
+  type?: string
   currentUser: any
   onDeleteItem?: (itemId: string, itemType: string) => Promise<any>
   onEditItem?: (itemId: string, itemType: string) => void
@@ -65,7 +64,7 @@ export function GalleryItem({ item, type = 'post', currentUser, onDeleteItem, on
   // 첫 번째 이미지 URL 가져오기 (있는 경우)
   const thumbnailUrl = item.image_urls && item.image_urls.length > 0 
     ? item.image_urls[0] 
-    : 'https://images.unsplash.com/photo-1635776062129-a74c10350adf?q=80&w=1032&auto=format&fit=crop'
+    : 'https://via.placeholder.com/500x500'
 
   // 태그 클릭 핸들러
   const handleTagClick = (e: React.MouseEvent, tag: string) => {
@@ -112,20 +111,20 @@ export function GalleryItem({ item, type = 'post', currentUser, onDeleteItem, on
     
     switch (contentType) {
       case 'image':
-        return `/image/${item.id}`;
+        return `/images/${item.id}`; // 아이템 ID를 사용하여 이미지 상세 페이지 경로 생성
       case 'video':
-        return `/video/${item.id}`;
+        return `/videos/${item.id}`; // 아이템 ID를 사용하여 비디오 상세 페이지 경로 생성
       case 'model':
-        return `/model/${item.id}`;
+        return `/models/${item.id}`; // 아이템 ID를 사용하여 모델 상세 페이지 경로 생성
       case 'development':
-        return `/development/${item.id}`;
+        return `/development/${item.id}`; // 아이템 ID를 사용하여 개발 상세 페이지 경로 생성
       case 'challenge':
-        return `/challenge/${item.id}`;
+        return `/challenges/${item.id}`; // 아이템 ID를 사용하여 챌린지 상세 페이지 경로 생성
       case 'shop':
-        return `/shop/${item.id}`;
+        return `/shop/${item.id}`; // 아이템 ID를 사용하여 상점 상세 페이지 경로 생성
       case 'post':
       default:
-        return `/post/${item.id}`;
+        return `/posts/${item.id}`; // 아이템 ID를 사용하여 포스트 상세 페이지 경로 생성
     }
   };
 
@@ -167,14 +166,13 @@ export function GalleryItem({ item, type = 'post', currentUser, onDeleteItem, on
     // router.push(editUrl);
   };
 
+  // 이미지 너비/높이 데이터 확인 (없으면 기본값 사용)
+  const imageWidth = item.width || 500; // 기본 너비
+  const imageHeight = item.height || 500; // 기본 높이
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-    >
-      <Card className="overflow-hidden group relative">
-        {isOwner && (onDeleteItem || onEditItem) && (
+    <div className="relative group mb-3 break-inside-avoid overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 bg-card">
+      {isOwner && (onDeleteItem || onEditItem) && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button 
@@ -208,65 +206,42 @@ export function GalleryItem({ item, type = 'post', currentUser, onDeleteItem, on
             </DropdownMenuContent>
           </DropdownMenu>
         )}
-        <Link href={detailPageUrl}>
-          <div className="aspect-video relative overflow-hidden">
-            <Image
-              src={thumbnailUrl}
-              alt={item.title}
-              fill
-              unoptimized={thumbnailUrl.startsWith('http')}
-              className="object-cover transition-transform hover:scale-105"
-            />
-          </div>
-        </Link>
-        <CardContent className="p-4">
-          <div className="flex items-start justify-between mb-2">
-            <Link href={detailPageUrl} className="flex-1 mr-2">
-              <h3 className="font-semibold text-lg line-clamp-2 hover:text-primary">
-                {item.title}
-              </h3>
-            </Link>
-          </div>
-          <div className="text-sm text-muted-foreground line-clamp-2 mb-3">
-            {item.content}
-          </div>
-          <div className="flex flex-wrap gap-2 mb-4">
-            {item.tags && item.tags.map((tag, index) => (
-              <Badge 
-                key={index} 
-                variant="secondary" 
-                className="px-2 py-0 text-xs cursor-pointer hover:bg-primary/20"
-                onClick={(e) => handleTagClick(e, tag)}
-              >
-                {tag}
-              </Badge>
-            ))}
-          </div>
-        </CardContent>
-        <CardFooter className="p-4 pt-0 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Avatar className="h-6 w-6">
+      
+      <Link href={detailPageUrl}>
+        <Image
+          src={thumbnailUrl}
+          alt={item.title}
+          width={imageWidth}
+          height={imageHeight}
+          layout="responsive"
+          className="transition-transform group-hover:scale-105 duration-300"
+          unoptimized={thumbnailUrl.startsWith('http')}
+        />
+      </Link>
+
+      <div className="p-3">
+        <div className="flex items-center justify-between text-xs text-muted-foreground mt-1">
+          <Link href={`/profile?id=${item.user_id}`} className="flex items-center gap-1.5 hover:text-foreground transition-colors" onClick={(e) => e.stopPropagation()}>
+            <Avatar className="h-5 w-5">
               <AvatarImage src={avatarUrl} />
-              <AvatarFallback>{userName.charAt(0)}</AvatarFallback>
+              <AvatarFallback>{userName?.charAt(0) || 'U'}</AvatarFallback>
             </Avatar>
-            <span className="text-sm text-muted-foreground">{userName}</span>
-          </div>
-          <div className="flex items-center gap-3 text-muted-foreground">
-            <div className="flex items-center gap-1">
-              <Heart className="h-3.5 w-3.5" />
-              <span className="text-xs">{item.likes_count}</span>
+            <span className="line-clamp-1">{userName}</span>
+          </Link>
+
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-0.5">
+              <Heart className="h-3 w-3" />
+              <span>{item.likes_count ?? 0}</span>
             </div>
-            <div className="flex items-center gap-1">
-              <Eye className="h-3.5 w-3.5" />
-              <span className="text-xs">{item.views_count}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <MessageSquare className="h-3.5 w-3.5" />
-              <span className="text-xs">{item.comments_count}</span>
+            {/* 조회수 부분 */}
+            <div className="flex items-center gap-0.5">
+              <Eye className="h-3 w-3" />
+              <span>{item.views_count ?? 0}</span>
             </div>
           </div>
-        </CardFooter>
-      </Card>
-    </motion.div>
+        </div>
+      </div>
+    </div>
   )
 } 

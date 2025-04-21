@@ -359,13 +359,11 @@ export default function ManagePage() {
                             </TableCell>
                             <TableCell className="text-right">
                               <Button 
-                                variant="outline" 
-                                size="sm" 
-                                className="mr-2"
-                                onClick={() => router.push(`/post/${post.id}`)}
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => router.push(`/posts/${post.id}`)}
                               >
-                                <Eye className="h-4 w-4 mr-1" />
-                                보기
+                                View Post
                               </Button>
                               <Button 
                                 variant="destructive" 

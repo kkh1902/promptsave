@@ -1,3 +1,4 @@
+import Masonry from 'react-masonry-css'
 import { GalleryItem } from "./gallery-item"
 import { GalleryItem as GalleryItemType } from "@/hooks/useGallery"
 import { motion, AnimatePresence } from "framer-motion"
@@ -10,32 +11,40 @@ interface GalleryGridProps {
   onEditItem?: (itemId: string, itemType: string) => void;
 }
 
+const breakpointColumnsObj = {
+  default: 6,
+  1536: 5,
+  1280: 4,
+  1024: 3,
+  768: 2,
+  640: 2
+};
+
 export function GalleryGrid({ items, type = 'post', currentUser, onDeleteItem, onEditItem }: GalleryGridProps) {
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-      <AnimatePresence>
-        {items.map((item, index) => (
-          <motion.div
-            key={item.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{
-              duration: 0.4,
-              delay: index * 0.05,
-              ease: "easeOut"
-            }}
-          >
-            <GalleryItem 
-              item={item} 
-              type={type} 
-              currentUser={currentUser}
-              onDeleteItem={onDeleteItem}
-              onEditItem={onEditItem}
-            />
-          </motion.div>
-        ))}
-      </AnimatePresence>
-    </div>
+    <Masonry
+      breakpointCols={breakpointColumnsObj}
+      className="my-masonry-grid"
+      columnClassName="my-masonry-grid_column"
+    >
+      {items.map((item, index) => (
+        <motion.div 
+          key={item.id} 
+          layout
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3, delay: index * 0.05 }}
+        >
+          <GalleryItem 
+            item={item} 
+            type={type} 
+            currentUser={currentUser}
+            onDeleteItem={onDeleteItem}
+            onEditItem={onEditItem}
+          />
+        </motion.div>
+      ))}
+    </Masonry>
   )
 } 
