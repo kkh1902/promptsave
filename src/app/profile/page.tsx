@@ -68,8 +68,36 @@ export default function ProfilePage() {
   // 수정 페이지로 이동하는 함수
   const handleEditItem = (itemId: string, itemType: string) => {
     // itemType에 따라 적절한 수정 페이지 경로 생성
-    // 예시: /post/123/edit, /image/abc/edit 등
-    const editUrl = `/${itemType}/${itemId}/edit`; 
+    // 복수형 URL 사용: /posts/123/edit, /images/abc/edit 등
+    let urlPath;
+    
+    switch (itemType) {
+      case 'post':
+        urlPath = `posts`;
+        break;
+      case 'image':
+        urlPath = `images`;
+        break;
+      case 'video':
+        urlPath = `videos`;
+        break;
+      case 'model':
+        urlPath = `models`;
+        break;
+      case 'challenge':
+        urlPath = `challenges`;
+        break;
+      case 'shop':
+        urlPath = `shop`;
+        break;
+      case 'development':
+        urlPath = `development`;
+        break;
+      default:
+        urlPath = `${itemType}s`; // 기본적으로 복수형으로 만듦
+    }
+    
+    const editUrl = `/${urlPath}/${itemId}/edit`; 
     router.push(editUrl);
   };
 

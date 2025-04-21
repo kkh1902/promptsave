@@ -255,7 +255,7 @@ export default function EditPostPage() {
       toast.success('포스트가 성공적으로 수정되었습니다.');
       setNewFiles([]); // 성공 시 새 파일 목록 초기화
       setNewImageLocalUrls([]); // 성공 시 로컬 URL 목록 초기화
-      router.push(`/post/${postId}`);
+      router.push(`/posts/${postId}`);
       router.refresh();
 
     } catch (err: any) {
@@ -332,7 +332,7 @@ export default function EditPostPage() {
               <h1 className="text-2xl font-bold">포스트 수정</h1>
             </div>
             <div className="flex items-center gap-4">
-              <Button variant="outline" onClick={() => router.push(`/post/${postId}`)} disabled={isSubmitting}>
+              <Button variant="outline" onClick={() => router.push(`/posts/${postId}`)} disabled={isSubmitting}>
                 취소
               </Button>
               <Button disabled={isSubmitting || isLoading} onClick={handleSubmit}>
