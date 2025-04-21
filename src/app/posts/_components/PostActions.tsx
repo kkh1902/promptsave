@@ -35,13 +35,13 @@ export function PostActions({
   const isOwner = currentUserId && authorId && currentUserId === authorId;
 
   const handleShare = () => {
-    navigator.clipboard.writeText(`${window.location.origin}/post/${postId}`);
+    navigator.clipboard.writeText(`${window.location.origin}/posts/${postId}`); 
     toast.success('게시물 링크가 복사되었습니다.');
   };
 
   const handleEdit = () => {
     if (!isOwner) return;
-    router.push(`/post/${postId}/edit`);
+    router.push(`/posts/${postId}/edit`);
   };
   
   const handleDelete = async () => {

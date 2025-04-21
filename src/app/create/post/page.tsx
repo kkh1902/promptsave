@@ -553,49 +553,51 @@ ${imageWidth} x ${imageHeight}
                 <h3 className="text-base font-medium mb-4">업로드된 이미지</h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {imageUrls.map((url, index) => (
-                    <div key={index} className="relative group">
-                      <div className={`w-full aspect-square relative rounded-lg overflow-hidden border ${
-                        files[index] === coverImage ? 'ring-2 ring-primary' : ''
-                      }`}>
-                        <NextImage 
-                          src={url} 
-                          alt={`업로드 이미지 ${index + 1}`} 
-                          fill
-                          style={{ objectFit: 'cover' }}
-                        />
-                        {files[index] === coverImage && (
-                          <div className="absolute top-2 left-2 bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded">
-                            커버
-                          </div>
-                        )}
+                    url ? (
+                      <div key={index} className="relative group">
+                        <div className={`w-full aspect-square relative rounded-lg overflow-hidden border ${
+                          files[index] === coverImage ? 'ring-2 ring-primary' : ''
+                        }`}>
+                          <NextImage 
+                            src={url} 
+                            alt={`업로드 이미지 ${index + 1}`} 
+                            fill
+                            style={{ objectFit: 'cover' }}
+                          />
+                          {files[index] === coverImage && (
+                            <div className="absolute top-2 left-2 bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded">
+                              커버
+                            </div>
+                          )}
+                        </div>
+                        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
+                          <Button 
+                            variant="secondary" 
+                            size="sm"
+                            onClick={() => insertImageToContent(url)}
+                            className="mx-1"
+                          >
+                            삽입
+                          </Button>
+                          <Button 
+                            variant="secondary" 
+                            size="sm"
+                            onClick={() => setCoverImageFromExisting(files[index], url)}
+                            className="mx-1"
+                          >
+                            커버로 설정
+                          </Button>
+                          <Button 
+                            variant="destructive" 
+                            size="sm"
+                            onClick={() => removeFile(index)}
+                            className="mx-1"
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
-                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
-                        <Button 
-                          variant="secondary" 
-                          size="sm"
-                          onClick={() => insertImageToContent(url)}
-                          className="mx-1"
-                        >
-                          삽입
-                        </Button>
-                        <Button 
-                          variant="secondary" 
-                          size="sm"
-                          onClick={() => setCoverImageFromExisting(files[index], url)}
-                          className="mx-1"
-                        >
-                          커버로 설정
-                        </Button>
-                        <Button 
-                          variant="destructive" 
-                          size="sm"
-                          onClick={() => removeFile(index)}
-                          className="mx-1"
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
+                    ) : null
                   ))}
                 </div>
               </div>

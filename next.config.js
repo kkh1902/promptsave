@@ -14,15 +14,42 @@ const nextConfig = {
         port: '',
         pathname: '/u/**',
       },
-      // TODO: 추후 Supabase Storage 사용 시 public URL의 호스트명 추가 필요
-      // 예: 
-      // {
-      //   protocol: 'https',
-      //   hostname: 'YOUR_PROJECT_ID.supabase.co',
-      //   port: '',
-      //   pathname: '/storage/v1/object/public/**',
-      // },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
+        port: '',
+        pathname: '/**',
+      },
+      // Supabase Storage 추가
+      {
+        protocol: 'https',
+        hostname: 'opsegxznqckwpvhpotod.supabase.co',
+        port: '',
+        pathname: '/storage/v1/object/public/**',
+      },
     ],
+  },
+  
+  // /image 경로를 /images 경로로 리다이렉트
+  async redirects() {
+    return [
+      {
+        source: '/image/:id',
+        destination: '/images/:id',
+        permanent: true,
+      },
+      {
+        source: '/image',
+        destination: '/images',
+        permanent: true,
+      }
+    ]
   },
 }
 

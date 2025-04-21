@@ -23,9 +23,9 @@ import { Banner } from "@/components/banner/banner"
 import { CategoryNavigation } from "@/components/category/category-navigation"
 import { Footer } from "@/components/footer/footer"
 import { AuthorProfileCard } from '../_components/AuthorProfileCard'
-import { TableOfContentsCard } from '../components/TableOfContentsCard'
-import { CoverImageCard } from '../components/CoverImageCard'
-import { PostActions } from '../components/PostActions'
+import { TableOfContentsCard } from '../_components/TableOfContentsCard'
+import { CoverImageCard } from '../_components/CoverImageCard'
+import { PostActions } from '../_components/PostActions'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
